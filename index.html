@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antonio Desiderio</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <!-- Three.js CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Intro Overlay -->
+    <div id="intro-overlay">
+        <div id="intro-content">
+            <div id="cube-container-intro"></div>
+            <h1 id="intro-greeting"></h1>
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main Content (Hidden initially) -->
+    <main id="main-content" class="hidden">
+        <nav class="navbar">
+            <div class="nav-logo">Antonio Desiderio</div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#welcome" class="nav-link">About</a></li>
+                <li><a href="#jobs" class="nav-link">Jobs & Education</a></li>
+                <li><a href="#publications" class="nav-link">Publications</a></li>
+                <li><a href="#students" class="nav-link">Students</a></li>
+                <li><a href="#collaborations" class="nav-link">Collaborations</a></li>
+                <li><a href="#behind-paper" class="nav-link">Behind the Paper</a></li>
+                <li><a href="#know-more" class="nav-link">To Know Me More</a></li>
+            </ul>
+        </nav>
+
+        <section id="welcome" class="section">
+            <div class="container">
+                <div class="profile-layout">
+                    <div class="profile-text">
+                        <h2>Welcome</h2>
+                        <div id="welcome-text"></div>
+                        <div id="contacts-container"></div>
+                        <div class="mt-1">
+                            <a href="assets/cv.pdf" class="filter-btn no-decoration border-dark" download>Download
+                                CV</a>
+                        </div>
+                    </div>
+                    <div class="profile-image-container">
+                        <!-- Profile picture -->
+                        <img src="assets/profile.jpg" alt="Profile" class="profile-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="jobs" class="section section-hidden">
+            <div class="container">
+                <h2>Jobs & Education</h2>
+                <ul id="jobs-list" class="item-list"></ul>
+            </div>
+            <div class="container mt-4">
+                <h3>Visiting & Grants</h3>
+                <p class="description mt-1">Placeholder for Visiting & Grants content...</p>
+            </div>
+
+        </section>
+
+        <section id="publications" class="section section-hidden">
+            <div class="container">
+                <h2>Publications</h2>
+
+                <div id="pub-filters" class="filters-container">
+                    <!-- Dynamic filters -->
+                </div>
+
+                <h3>Journal Papers</h3>
+                <ul id="publications-list" class="item-list"></ul>
+
+                <br>
+                <h3>Preprints</h3>
+                <ul id="preprints-list" class="item-list"></ul>
+
+                <br>
+
+            </div>
+        </section>
+
+        </section>
+
+
+        <section id="students" class="section section-hidden">
+            <div class="container">
+                <h2>Co-Supervised Students</h2>
+                <p class="section-intro">These are students (Bachelor, Master, PhD and Fellows) that I have
+                    co-supervised through time. <br>
+                    They chart the trajectory of my work, enabling me to broaden my research focus.
+                </p>
+
+                <div class="filters-container">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="PhD">PhD</button>
+                    <button class="filter-btn" data-filter="Master">Master</button>
+                    <button class="filter-btn" data-filter="Bachelor">Bachelor</button>
+                    <button class="filter-btn" data-filter="Physics">Physics</button>
+                    <button class="filter-btn" data-filter="Computer Science">Computer Science</button>
+                    <button class="filter-btn" data-filter="Finance">Finance</button>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div id="students-timeline" class="timeline-items">
+                        <!-- Students rendered here -->
+                    </div>
+                </div>
+
+
+                <!-- Student Notes -->
+                <!-- Student Notes -->
+                <div class="student-notes">
+                    <h3>Notes to Master Thesis</h3>
+                    <p>If you are a student, you are likely looking for this:<br><br></p>
+
+                    <a href="assets/How_to_Master_Thesis.pdf" class="filter-btn active no-decoration" download>
+                        Download Notes
+                    </a>
+
+                    <p class="description">
+                        <br>
+                        I wrote these notes in 2024 during my postdoc at the Technical University of Denmark (DTU).
+                        I keep updating them from time to time.
+                        They contain a collection of tips, tricks, and even a few jokes to help you navigate your
+                        thesis period—whether you are a Bachelor, Master, or Fellowship student.
+                        I am certainly not the first to write such a guide; for other excellent guides,
+                        see these posts <a
+                            href="https://jarisaramaki.fi/2020/03/06/how-to-write-an-excellent-masters-thesis/"
+                            style="color: inherit; text-decoration: underline;">Note 1</a>
+                        and <a href="https://sunelehmann.com/how-to-write-a-masters-thesis/"
+                            style="color: inherit; text-decoration: underline;">Note 2</a>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="collaborations" class="section section-hidden">
+            <div class="container">
+                <h2>Collaborations</h2>
+                <p class="section-intro">This map tracks my research path through my main collaborators.</p>
+                <div id="map-container">
+                    <div id="collaborations-map"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="behind-paper" class="section section-hidden">
+            <div class="container">
+                <h2>Behind the Paper</h2>
+
+                <!-- Moved from Publications -->
+                <h3>Outreach & Press</h3>
+                <ul id="outreach-list" class="item-list mb-3"></ul>
+
+                <h3>Chronicles</h3>
+                <p>I’ll be using this space to share behind-the-scenes chronicles into my research-tracing the evolution
+                    of my papers from the initial spark of an idea through the publication process, maybe grouping
+                    related works to tell the broader story of their development. Coming soon...</p>
+            </div>
+        </section>
+
+        <section id="know-more" class="section section-hidden">
+            <canvas id="manga-canvas"></canvas>
+            <div class="container">
+                <h2>To Know Me More</h2>
+                <p class="intro-text">
+                    Manga have been an integral part of my life since I was little and have memory. <br>
+                    Here are some of the manga I love and consider important.
+                </p>
+                <ul id="manga-list" class="item-list manga-list"></ul>
+                <h3>I will add soon other stuff...</h3>
+            </div>
+        </section>
+
+
+
+        <footer>
+            <p>&copy; <span id="year"></span> Antonio Desiderio</p>
+        </footer>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script type="module" src="js/main.js?v=2"></script>
+</body>
+
+</html>

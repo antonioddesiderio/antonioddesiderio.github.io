@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Dragon Ball by Akira Toriyama",
+    "description": "What can I even say about Dragon Ball? It has inspired entire generations by teaching us that hard work and relentless training can make any goal achievable. It’s the ultimate lesson in never giving up. Honestly, it’s hard to put into words what this series means to me. When Akira Toriyama passed away, I had to call my brother. And...Dragon Quest? It’s unique, timeless, and instantly recognizable; he brought a sense of adventure and charm to everything he touched",
+    "image": "dragonball.jpg"
+  },
+  {
+    "title": "Akira by Katsuhiro Otomo",
+    "description": "Akira isn’t just a manga, and it isn't just a film... it’s an experience. When you read the manga, you get one vision of what Akira is; then you watch the movie, and you’re hit with a completely different interpretation. Whenever I’m in need of inspiration, I always turn to Akira or JoJo. The sheer power of those opening pages and Otomo’s maniacal attention to detail is simply mind-blowing. Akira transcends any single medium; it’s a 'movement' that defined an entire aesthetic. The way Otomo just didn't give a damn about conventions and followed his own vision is incredibly inspiring.",
+    "image": "akira.jpg"
+  },
+  {
+    "title": "Slam Dunk by Takehiko Inoue",
+    "description": "Takehiko Inoue is a master of visual storytelling; his art is so immersive that you lose yourself completely in every panel. To give you an idea, I once read the final ten volumes of Slam Dunk in a single sitting. I just couldn't put them down. Even now, I still get goosebumps thinking about Coach Anzai’s celebration. While Slam Dunk might not be my absolute favorite work of his, it holds a special place as his only completed masterpiece. In my opinion, Vagabond is better when it comes to raw inspiration and breathtaking artwork, but Real is the one that truly strikes a chord and hits you right in the heart.",
+    "image": "slamdunk.jpg"
+  },
+  {
+    "title": "Steel Ball Run by Hirohiko Araki",
+    "description": "Araki once stated that he finds it almost impossible to draw in silence. In Steel Ball Run, this is palpable: the work is so filled with love and dynamism that it's hard to believe the panels are actually static. While the entirety of JoJo is brilliant, Steel Ball Run is on another level. It's pure adrenaline and unpredictability. You can almost hear the rhythm of the race through his lines; it’s a masterpiece that feels like it’s constantly in motion.",
+    "image": "steelballrun.jpg"
+  },
+  {
+    "title": "Ping Pong by Taiyo Matsumoto",
+    "description": "Ping Pong is the ultimate definition of friendship: what it means, what it should represent, and how to express it. And the anime? It’s an absolute masterpiece. Ping Pong holds a very special place in my heart, but so do Number 5 and Tekkonkinkreet with their bizarre and surreal worlds. Matsumoto has this unique ability to build settings that feel completely out of this world yet deeply human.",
+    "image": "pingpong.jpg"
+  },
+  {
+    "title": "A Distant Neighborhood by Jiro Taniguchi",
+    "description": "Who hasn't done it? Getting lost down memory lane. There was a time when you’d find a Bible in every hotel room; as I often tell my friends, they should place a copy of A Distant Neighborhood right next to it. While it is clearly Jiro Taniguchi’s most famous work, it’s also his most accessible and immediate, especially when compared to other masterpieces like Blanca or The Walking Man.",
+    "image": "distant.jpg"
+  },
+  {
+    "title": "Lady Snowblood by Kazuo Kamimura",
+    "description": "Kazuo Kamimura’s women are simply extraordinary; the way he portrayed every dimension of femininity is magnificent. It’s crazy to think that I watched Kill Bill first and only then read Lady Snowblood, yet the manga still managed to blow me away. The raw power of certain panels is incredible; his art has a strength that transcends the page.",
+    "image": "ladysnowblood.jpeg"
+  },
+  {
+    "title": "Devilman by Go Nagai",
+    "description": "Go Nagai has always surprised me with his irreverence, especially considering the era in which he wrote. He explores the corruption of the human soul with a brutal honesty that manifests both physically and spiritually. His art style is uniquely energetic and dramatic, perfectly capturing the absurdity of violence and the extreme fragility of peace.",
+    "image": "devilman.jpg"
+  },
+  {
+    "title": "Billy Bat by Naoki Urasawa",
+    "description": "It’s hard to pick a single definitive work by Naoki Urasawa. Monster is a thriller that keeps the reader on the edge of their seat with every single page. 20th Century Boys is a whirlwind of emotion, masterfully blending countless themes while always staying true to the author's passions and core values. Then there’s Pluto, which brings a level of depth and emotional weight that was hard to find in Tezuka’s original Astro Boy. So, why Billy Bat? Because Billy Bat explores humanity’s true superpower: the power of storytelling. It’s about the greatest narrative of all: human history itself. 'C'mon now, draw!'",
+    "image": "billybat.jpg"
+  },
+  {
+    "title": "Ashita no Joe by Asao Takamori",
+    "description": "Ashita no Joe is exceptional. It is a complex psychologically work. Exceptionally tragic, dramatic, and realistic, especially for its time. Through the grueling evolution of his character, Joe finds his true self within the boxing ring. The manga is essentially a nihilistic and self-destructive coming-of-age story of the boxer Joe Yabuki. I watched a boy who never truly existed burn his flame until there was nothing left but white ashes. This manga defined an entire generation of Japanese people, famously breaking the fourth wall when a real-life funeral was held for his rival. It is more than a story... it is an experience of burning intensity.",
+    "image": "joe.jpg"
+  }
+]
