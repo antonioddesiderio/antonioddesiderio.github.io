@@ -996,3 +996,50 @@ footer {
 .contacts-area p {
     margin-bottom: 0.5rem;
 }
+
+/* --- Mobile Optimization --- */
+@media (max-width: 768px) {
+
+    /* Disable Particle Canvas Visuals */
+    #particles-canvas {
+        display: none !important;
+    }
+
+    /* Hide Profile Avatar */
+    .profile-image-container {
+        display: none !important;
+    }
+
+    /* Remove Manga Background */
+    #manga-canvas {
+        display: none !important;
+    }
+
+    /* Adjust Layout */
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    /* Font Size Adjustments */
+    .section h2 {
+        font-size: 1.75rem;
+    }
+
+    .intro-text {
+        font-size: 1rem;
+    }
+
+    h1#intro-greeting {
+        font-size: 1rem; /* Smaller greeting on mobile */
+    }
+
+    /* Adjust Navigation for Mobile */
+    .nav-logo {
+        font-size: 1rem;
+    }
+
+    /* Ensure content is readable */
+    p {
+        font-size: 0.95rem;
+    }
+}

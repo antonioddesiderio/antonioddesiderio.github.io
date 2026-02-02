@@ -16,11 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAssistant(); // New
 
 
-    // Init Manga Sketch Background
-    window.mangaBg = new MangaBackground('manga-canvas');
 
-    // Init Particle Background
-    window.particleBg = new ParticleNetwork('particles-canvas'); // New
+    // Init Backgrounds only on Desktop (> 768px)
+    if (window.innerWidth > 768) {
+        // Init Manga Sketch Background
+        window.mangaBg = new MangaBackground('manga-canvas');
+
+        // Init Particle Background
+        window.particleBg = new ParticleNetwork('particles-canvas'); // New
+    }
+
 
     // Init AOS
     setTimeout(() => {
