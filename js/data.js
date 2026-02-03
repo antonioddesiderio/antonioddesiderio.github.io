@@ -254,7 +254,7 @@ export const DATA = {
         {
             name: "Dr. Laura Silva",
             university: "University of Lausanne",
-            coords: [48.3090732,4.448786],
+            coords: [46.5128106,6.5729342],
             site: "https://sites.google.com/view/laura-elinor-silva/home/",
             tag: "Social Science"
         },
