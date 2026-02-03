@@ -198,21 +198,21 @@ export const DATA = {
         {
             name: "Prof. Giulio Cimini",
             university: "University of Rome Tor Vergata",
-            coords: [41.8540, 12.6300],
+            coords: [41.8527643,12.6012077],
             site: "https://www.giuliocimini.com",
             tag: "Physics"
         },
         {
             name: "Dr. Fabio Saracco",
             university: "Enrico Fermi Research Center",
-            coords: [41.8540, 12.6300],
+            coords: [41.8998819,12.4917146],
             site: "https://sites.google.com/cref.it/fabiosaracco/",
             tag: "Social Media"
         },
         {
             name: "Dr. Yuan Liao",
-            university: "Chalmers University of Technology",
-            coords: [57.6863, 11.9726],
+            university: "Lund University",
+            coords: [55.7119512,13.1986221],
             site: "https://yuan-liao.com/",
             tag: "Human Mobility"
         },
@@ -254,7 +254,7 @@ export const DATA = {
         {
             name: "Dr. Laura Silva",
             university: "University of Lausanne",
-            coords: [46.5306311,3.9711803],
+            coords: [48.3090732,4.448786],
             site: "https://sites.google.com/view/laura-elinor-silva/home/",
             tag: "Social Science"
         },
