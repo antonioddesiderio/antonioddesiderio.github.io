@@ -177,21 +177,21 @@ export const DATA = {
         {
             name: "Prof. Sune Lehmann",
             university: "DTU Compute",
-            coords: [55.7856, 12.5204],
+            coords: [55.6852823,12.5708177],
             site: "https://sunelehmann.com/",
             tag: "Food"
         },
         {
             name: "Prof. Laura Alessandretti",
             university: "DTU Compute",
-            coords: [55.7856, 12.5204],
+            coords: [55.7838539,12.5135907],
             site: "https://laura.alessandretti.com/",
             tag: "Human Mobility"
         },
         {
             name: "Prof. Riccardo Di Clemente",
             university: "Northeastern University London",
-            coords: [51.5074, -0.1278], // London approx
+            coords: [51.5081157,-0.0779127],
             site: "https://www.riccardodiclemente.com",
             tag: "Urban Dynamics"
         },
@@ -219,33 +219,45 @@ export const DATA = {
         {
             name: "Prof. Iacopo Iacopini",
             university: "Northeastern University London",
-            coords: [51.5074, -0.1278],
+            coords: [51.5098927,-0.0809041],
             site: "https://iaciac.github.io/",
             tag: "Complex Systems"
         },
         {
+            name: "Prof. Paolo Barucca",
+            university: "University College London",
+            coords: [51.5242614,-0.1368477],
+            site: "https://paolobarucca.com/",
+            tag: "Finance"
+        },
+        {
             name: "Prof. Luca Pappalardo",
             university: "ISTI-CNR and Scuola Normale Superiore",
-            coords: [43.7190, 10.399],
+            coords: [43.7180897,10.403158],
             site: "https://kdd.isti.cnr.it/people/pappalardo-luca/",
             tag: "Human Mobility"
         },
         {
             name: "Dr. Mattia Mazzoli",
             university: "ISI Foundation",
-            coords: [45.116177, 7.742615],
+            coords: [45.0618703,7.6845718],
             site: "https://mattiamazzoli.github.io/",
             tag: "Human Mobility"
         },
         {
             name: "Dr. Sandor Juhasz",
             university: "Corvinus University of Budapest",
-            coords: [47.497913, 19.040236],
+            coords: [47.486157,19.0556806],
             site: "https://sandorjuhasz.com//",
             tag: "Urban Dynamics"
         },
-
-
+        {
+            name: "Dr. Laura Silva",
+            university: "University of Lausanne",
+            coords: [46.5306311,3.9711803],
+            site: "https://sites.google.com/view/laura-elinor-silva/home/",
+            tag: "Social Science"
+        },
     ],
     grants: [
         {
