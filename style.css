@@ -17,7 +17,16 @@
     width: 100%;
     aspect-ratio: 1;
     border-radius: 50%;
+
+    /* 
+       ZOOM/CROP CONTROL:
+       - object-fit: 'cover' (zooms to fill), 'contain' (shows whole image)
+       - object-position: 'center center' (default). Try 'center top' to show more head/face.
+    */
     object-fit: cover;
+    object-position: center center;
+    /* <--- Adjust this to shift the crop */
+
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, filter 0.4s ease;
     filter: grayscale(30%);
@@ -353,14 +362,7 @@ a:hover {
     color: var(--text-secondary);
 }
 
-.profile-img {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
+/* .profile-img styles consolidated to top of file */
 
 .profile-img:hover {
     transform: scale(1.02);
@@ -1030,7 +1032,8 @@ footer {
     }
 
     h1#intro-greeting {
-        font-size: 1rem; /* Smaller greeting on mobile */
+        font-size: 1rem;
+        /* Smaller greeting on mobile */
     }
 
     /* Adjust Navigation for Mobile */
