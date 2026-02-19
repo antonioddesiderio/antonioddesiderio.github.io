@@ -157,7 +157,7 @@ export const DATA = {
         {
             id: 11,
             name: "Margherita Bencini",
-            collaborators: "Prof. Paolo Barucca (UCL)",
+            collaborators: "Prof. Daniele Marazzina (polimi), Prof. Paolo Barucca (UCL)",
             university: "Polytechnic University of Milan",
             year: "2025",
             tags: ["Master", "Finance", "Social Media"]
