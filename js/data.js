@@ -59,8 +59,8 @@ export const DATA = {
     ],
     contacts: {
         emails: [
-            "antonio.desiderio [at] isi [dot] it",
-            "antonio.desiderio [at] cref [dot] it",
+            "antonio [dot] desiderio [at] isi [dot] it",
+            "antonio [dot] desiderio [at] cref [dot] it",
             "antde [at] dtu [dot] dk"
         ],
         socials: [
