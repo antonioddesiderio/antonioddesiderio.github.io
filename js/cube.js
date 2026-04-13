@@ -70,6 +70,9 @@ export class RubiksCube {
             this.controls.enableDamping = true;
             this.controls.dampingFactor = 0.05;
             this.controls.autoRotate = false;
+            
+            // Add custom drag interaction logic
+            this.setupInteraction();
         } else {
             // For intro cube, we might want manual rotation or auto-rotation
             // For now, let's just leave it static view
@@ -80,6 +83,117 @@ export class RubiksCube {
 
         // Resize handler
         window.addEventListener('resize', () => this.onWindowResize());
+    }
+
+    setupInteraction() {
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        
+        this.isDraggingCubelet = false;
+        this.dragStartPoint3D = new THREE.Vector3();
+        this.dragPlane = new THREE.Plane();
+        this.intersectedFaceNormal = null;
+        this.dragCubelet = null;
+
+        const onPointerDown = (event) => {
+            if (this.isAnimating) return;
+            if (event.button !== 0) return; // Only left click
+            
+            const rect = this.renderer.domElement.getBoundingClientRect();
+            this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            
+            // Intersect only the cube patches
+            const intersects = this.raycaster.intersectObjects(this.cubelets);
+            if (intersects.length > 0) {
+                // If the user hits a black area (internal), we ignore or accept? 
+                // Let's accept any hit since they are tightly packed.
+                this.controls.enabled = false;
+                this.isDraggingCubelet = true;
+                this.dragCubelet = intersects[0].object;
+                
+                this.dragStartPoint3D.copy(intersects[0].point);
+                
+                // Get normal in world space
+                const normalMatrix = new THREE.Matrix3().getNormalMatrix(this.dragCubelet.matrixWorld);
+                this.intersectedFaceNormal = intersects[0].face.normal.clone().applyMatrix3(normalMatrix).normalize();
+                
+                // Snap normal to closest axis (e.g., (0.99, 0.01, 0) -> (1, 0, 0)) to avoid precision issues
+                ['x', 'y', 'z'].forEach(ax => {
+                    this.intersectedFaceNormal[ax] = Math.round(this.intersectedFaceNormal[ax]);
+                });
+
+                this.dragPlane.setFromNormalAndCoplanarPoint(this.intersectedFaceNormal, this.dragStartPoint3D);
+            }
+        };
+
+        const onPointerMove = (event) => {
+            if (!this.isDraggingCubelet || this.isAnimating) return;
+
+            const rect = this.renderer.domElement.getBoundingClientRect();
+            this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+
+            const newIntersectPoint = new THREE.Vector3();
+            if (this.raycaster.ray.intersectPlane(this.dragPlane, newIntersectPoint)) {
+                const delta3D = newIntersectPoint.clone().sub(this.dragStartPoint3D);
+                
+                if (delta3D.length() > 0.4) {
+                    // Identify the dominant drag axis
+                    let maxVal = 0;
+                    let dragDir = new THREE.Vector3();
+                    ['x', 'y', 'z'].forEach(ax => {
+                        if (Math.abs(delta3D[ax]) > maxVal) {
+                            maxVal = Math.abs(delta3D[ax]);
+                            dragDir.set(0, 0, 0);
+                            dragDir[ax] = Math.sign(delta3D[ax]);
+                        }
+                    });
+
+                    // Cross product logic: normal x dragDir
+                    const rotationVector = new THREE.Vector3().crossVectors(this.intersectedFaceNormal, dragDir);
+                    
+                    let dragAxis = null;
+                    let rotateDir = 1;
+                    
+                    ['x', 'y', 'z'].forEach(ax => {
+                        if (Math.abs(rotationVector[ax]) > 0.5) {
+                            dragAxis = ax;
+                            rotateDir = Math.sign(rotationVector[ax]);
+                        }
+                    });
+
+                    if (dragAxis) {
+                        const spacing = 1.02;
+                        const worldPos = new THREE.Vector3();
+                        this.dragCubelet.getWorldPosition(worldPos);
+                        
+                        // Because rotating the whole group might offset the local positions from expected 
+                        // geometric grid, we find index based on current coordinate relative to center.
+                        const index = Math.round(worldPos[dragAxis] / spacing);
+
+                        this.rotateFace(dragAxis, index, rotateDir, true, 400);
+                        this.isDraggingCubelet = false; // Stop drag after initiating animation
+                        this.controls.enabled = true;
+                    }
+                }
+            }
+        };
+
+        const onPointerUp = () => {
+            if (this.isDraggingCubelet) {
+                this.isDraggingCubelet = false;
+                this.controls.enabled = true;
+            }
+        };
+
+        const dom = this.renderer.domElement;
+        dom.addEventListener('pointerdown', onPointerDown);
+        dom.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
     }
 
     createStickerTexture(colorHex) {

@@ -71,12 +71,15 @@ function setupNavigation() {
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href').substring(1);
-            showSection(targetId);
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                showSection(targetId);
 
-            // Optional: Update URL hash without scrolling
-            history.pushState(null, null, `#${targetId}`);
+                // Optional: Update URL hash without scrolling
+                history.pushState(null, null, `#${targetId}`);
+            }
         });
     });
 
