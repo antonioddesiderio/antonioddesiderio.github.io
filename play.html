@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a Game | Antonio Desiderio</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            flex-direction: column;
+            background-color: var(--bg-color);
+        }
+
+        .play-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+
+        .play-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(224, 0, 60, 0.12);
+            border-color: var(--accent-color);
+        }
+
+        .game-card-img-wrapper {
+            width: 100%;
+            aspect-ratio: 1.2;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: #fdfdfd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .game-card:hover .game-card-img {
+            transform: scale(1.04);
+        }
+
+        .game-card-title {
+            font-family: var(--font-mono);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .game-card-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .play-btn {
+            display: inline-block;
+            padding: 0.6rem 2rem;
+            border: 2px solid var(--text-primary);
+            background: transparent;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover .play-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .back-nav {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .back-nav a {
+            text-decoration: none;
+            color: #111;
+            font-weight: 700;
+            padding: 12px 24px;
+            border: 2px solid #111;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .back-nav a:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .back-nav {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            .play-container {
+                padding: 40px 20px;
+            }
+            .play-title {
+                font-size: 2rem;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .quotes-block {
+            margin-top: 6rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .quote-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quote-text {
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="play-container">
+        <div class="back-nav">
+            <a href="index.html">← Back to Site</a>
+        </div>
+
+        <h1 class="play-title">Choose a Game</h1>
+
+        <div class="games-grid">
+            <a href="play_cube.html" class="game-card">
+                <div class="game-card-img-wrapper">
+                    <img src="assets/cube_preview.png" alt="Rubik's Cube" class="game-card-img">
+                </div>
+                <h2 class="game-card-title">Rubik's Cube</h2>
+                <p class="game-card-desc">Interactive 3D Rubik's Cube simulator. Drag pieces to rotate layers or click-drag outside to rotate the camera.</p>
+                <span class="play-btn">Play Cube</span>
+            </a>
+
+            <a href="play_tetris.html" class="game-card">
+                <div class="game-card-img-wrapper">
+                    <img src="assets/tetris_preview.png" alt="Tetris" class="game-card-img">
+                </div>
+                <h2 class="game-card-title">Tetris Classic</h2>
+                <p class="game-card-desc">Traditional block-puzzle game. Arrange falling blocks, clear lines, and beat your high score.</p>
+                <span class="play-btn">Play Tetris</span>
+            </a>
+
+            <a href="play_invaders.html" class="game-card">
+                <div class="game-card-img-wrapper">
+                    <img src="assets/invaders_preview.png" alt="Space Invaders" class="game-card-img">
+                </div>
+                <h2 class="game-card-title">Space Invaders</h2>
+                <p class="game-card-desc">Defend Earth from the alien armada! Classic arcade shooter with an object-oriented twist.</p>
+                <span class="play-btn">Play Invaders</span>
+            </a>
+        </div>
+
+        <div class="quotes-block">
+            <div class="quote-item">
+                <span class="quote-text">"If you are curious, you'll find the puzzles around you. If you are determined, you will solve them."</span>
+                <span class="quote-author">— Ernő Rubik</span>
+            </div>
+            <div class="quote-item">
+                <span class="quote-text">"On my business card, I am a corporate president. In my mind, I am a game developer. But in my heart, I am a gamer."</span>
+                <span class="quote-author">— Satoru Iwata</span>
+            </div>
+            <div class="quote-item">
+                <span class="quote-text">"We all make choices, but in the end our choices make us."</span>
+                <span class="quote-author">— Andrew Ryan (BioShock)</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { ParticleNetwork } from './js/particles-bg.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Particle Background initialization
+            if (window.innerWidth > 768) {
+                window.particleBg = new ParticleNetwork('particles-canvas');
+            }
+        });
+    </script>
+</body>
+
+</html>

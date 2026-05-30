@@ -362,6 +362,19 @@ a:hover {
     color: var(--text-secondary);
 }
 
+#welcome-text .welcome-contact {
+    margin-top: 2rem;
+    color: var(--text-primary);
+}
+
+#welcome-text .welcome-contact-sub {
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    font-style: italic;
+    display: inline-block;
+    margin-top: 0.4rem;
+}
+
 /* .profile-img styles consolidated to top of file */
 
 .profile-img:hover {

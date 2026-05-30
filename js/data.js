@@ -3,7 +3,7 @@ export const DATA = {
         <p>I am a Postdoctoral Researcher at the ISI Foundation, working with the Complex Connections Lab (Northeastern London).</p>
         <p>With a physicist’s perspective, I study the digital and physical traces we leave behind to quantitatively understand human dynamics. My research spans multiple domains, drawing on diverse datasets and methods from the physics of complex systems within the broader framework of Computational Social Science.</p>
         <p>I follow these traces across multiple domains: from the digital sphere—where I investigate how online coordination can trigger financial events and shape the way we consume news—to the physical world, exploring how urban design influences mobility and food networks.</p>
-        <p>If you have a question or find something interesting here, feel free to get in touch. I usually reply quickly.</p>
+        <p class="welcome-contact">If you have a question or find something interesting here, feel free to get in touch.<br><span class="welcome-contact-sub">I usually reply quickly.</span></p>
     `,
     jobs: [
         {

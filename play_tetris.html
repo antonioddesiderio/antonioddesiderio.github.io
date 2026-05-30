@@ -22,7 +22,7 @@
             padding: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #ffffff;
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -176,8 +176,10 @@
     </style>
 </head>
 <body>
+    <canvas id="particles-canvas"></canvas>
+
     <div class="back-nav">
-        <a href="index.html">← Back to Site</a>
+        <a href="play.html">← Back to Play</a>
     </div>
 
     <div class="game-layout">
@@ -221,8 +223,14 @@
 
     <script type="module">
         import { Tetris } from './js/tetris.js';
+        import { ParticleNetwork } from './js/particles-bg.js';
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Particle Background
+            if (window.innerWidth > 768) {
+                window.particleBg = new ParticleNetwork('particles-canvas');
+            }
+
             const game = new Tetris('tetris', 'next', 'score', 'level', 'lines');
             game.start();
 

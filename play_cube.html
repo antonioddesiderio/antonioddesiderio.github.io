@@ -25,7 +25,7 @@
             padding: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #ffffff;
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -78,8 +78,10 @@
     </style>
 </head>
 <body>
+    <canvas id="particles-canvas"></canvas>
+
     <div class="back-nav">
-        <a href="index.html">← Back to Site</a>
+        <a href="play.html">← Back to Play</a>
     </div>
 
     <div id="cube-container-play"></div>
@@ -91,8 +93,13 @@
 
     <script type="module">
         import { RubiksCube } from './js/cube.js';
+        import { ParticleNetwork } from './js/particles-bg.js';
         
         document.addEventListener('DOMContentLoaded', () => {
+            // Particle Background
+            if (window.innerWidth > 768) {
+                window.particleBg = new ParticleNetwork('particles-canvas');
+            }
             const cube = new RubiksCube('cube-container-play', true);
             // Always start with a random configuration on this page
             cube.scramble(30); 
