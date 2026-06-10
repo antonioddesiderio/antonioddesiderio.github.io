@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&family=Red+Hat+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
@@ -24,7 +24,10 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background-color: transparent; /* Allows particles to show */
+            background-color: var(--bg-color);
+            font-family: var(--font-body);
+            font-variation-settings: var(--font-settings-body);
+            color: var(--text-primary);
         }
 
         #game-container {
@@ -34,43 +37,50 @@
             flex-direction: column;
             align-items: center;
             background-color: #111;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border: 2px solid #222;
+            padding: var(--space-lg);
+            border-radius: var(--rounded-md, 12px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         canvas#invadersCanvas {
             background-color: #000;
             display: block;
             border-radius: 4px;
+            max-width: 90vw;
+            max-height: 70vh;
         }
 
         .back-nav {
             position: absolute;
-            top: 40px;
-            left: 40px;
-            font-family: 'Space Mono', monospace;
+            top: var(--space-xl);
+            left: var(--space-xl);
+            font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             text-transform: uppercase;
             z-index: 20;
         }
 
         .back-nav a {
             text-decoration: none;
-            color: #111;
-            font-weight: 700;
-            padding: 12px 24px;
-            border: 2px solid #111;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            background-color: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(5px);
+            color: var(--text-primary);
+            padding: var(--space-xs) var(--space-lg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: var(--step--1);
+            display: inline-block;
+            font-weight: 600;
         }
 
         .back-nav a:hover {
-            background-color: #111;
-            color: #fff;
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         #game-over-screen {
@@ -83,34 +93,47 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
             color: #fff;
-            font-family: 'Space Mono', monospace;
+            font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             z-index: 15;
-            border-radius: 12px;
+            border-radius: var(--rounded-md, 12px);
+            backdrop-filter: blur(4px);
         }
 
         #game-over-screen h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #E0003C;
+            font-size: var(--step-3);
+            margin-bottom: var(--space-md);
+            color: var(--accent-color);
+            letter-spacing: 0.1em;
+        }
+
+        #game-over-screen p {
+            font-size: var(--step-1);
+            margin-bottom: var(--space-xl);
         }
 
         #game-over-screen button {
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            font-family: 'Space Mono', monospace;
-            background-color: #23BC3F;
+            padding: var(--space-xs) var(--space-2xl);
+            font-size: var(--step--1);
+            font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
+            background-color: transparent;
             color: #fff;
-            border: none;
+            border: 2px solid #fff;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 30px;
             text-transform: uppercase;
-            transition: background-color 0.3s;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #game-over-screen button:hover {
-            background-color: #0051BA;
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -119,7 +142,7 @@
     <canvas id="particles-canvas"></canvas>
 
     <div class="back-nav">
-        <a href="play.html">← Back to Games</a>
+        <a href="play.html">← Back to Playground</a>
     </div>
 
     <div id="game-container">

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-09T12:00:00Z",
+  "title": "Design System: Antonio Desiderio Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Vibrant Red",
+        "canonical": "oklch(60.1% 0.25 15.5)",
+        "tonalRamp": [
+          "oklch(20% 0.1 15.5)",
+          "oklch(30% 0.15 15.5)",
+          "oklch(45% 0.2 15.5)",
+          "oklch(60% 0.25 15.5)",
+          "oklch(75% 0.15 15.5)",
+          "oklch(85% 0.1 15.5)",
+          "oklch(92% 0.05 15.5)",
+          "oklch(97% 0.02 15.5)"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Deep Ink",
+        "canonical": "#111111"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section headers and hero greetings."
+      },
+      "label": {
+        "displayName": "Mono Label",
+        "purpose": "Metadata, dates, and technical tags."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient-low",
+        "value": "0 10px 30px rgba(0, 0, 0, 0.1)",
+        "purpose": "Subtle lift for profile and interactive elements."
+      }
+    ],
+    "motion": [
+      {
+        "name": "standard-ease",
+        "value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "purpose": "Bounce-back ease for interactive scaling."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Filter Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill-shaped interaction button for category filtering.",
+      "html": "<button class=\"ds-filter-btn\">Tag Name</button>",
+      "css": ".ds-filter-btn { padding: 0.5rem 1.5rem; border: 1px solid #ccc; background: transparent; border-radius: 20px; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 0.9rem; transition: all 0.3s ease; } .ds-filter-btn:hover, .ds-filter-btn.active { background-color: #E0003C; color: white; border-color: #E0003C; }"
+    },
+    {
+      "name": "Research Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard card for listing publications, students, or jobs.",
+      "html": "<div class=\"ds-card\"><h3>Card Title</h3><p>Secondary description or metadata goes here.</p></div>",
+      "css": ".ds-card { background-color: #fff; border: 1px solid #eee; border-radius: 8px; padding: 1.5rem; transition: all 0.3s ease; } .ds-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); border-color: #ddd; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Precision Research",
+    "overview": "A high-contrast, typographically-driven system that balances academic rigor with modern interactive delight. The design leverages a strong hierarchy with distinct accents against a clean and premium white-space-heavy canvas.",
+    "keyCharacteristics": [
+      "Swiss-Inspired Hierarchy",
+      "Vibrant Red Accents",
+      "Motion-as-Utility"
+    ],
+    "rules": [
+      {
+        "name": "The Rarity Rule",
+        "body": "The Vibrant Red accent is used on ≤5% of any given screen.",
+        "section": "colors"
+      },
+      {
+        "name": "The Respond-to-Touch Rule",
+        "body": "Surfaces are flat at rest. Elevation appears only as a response to user state.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use Space Mono for all dates, tags, and small metadata.",
+      "Do maintain 1.6 line-height for all body prose."
+    ],
+    "donts": [
+      "Don't use blocky Notion-style cards with heavy borders.",
+      "Don't use generic WordPress-style gradients."
+    ]
+  }
+}

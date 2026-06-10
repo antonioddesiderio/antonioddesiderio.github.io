@@ -1,0 +1,12 @@
+{
+  "files": [
+    "index.html",
+    "play.html",
+    "play_cube.html",
+    "play_invaders.html",
+    "play_tetris.html"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

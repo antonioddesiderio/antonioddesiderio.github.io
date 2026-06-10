@@ -174,8 +174,7 @@ function loadPublications() {
 
             // Header line for reference: Type;Title;Venue;Year;Link;DOI;Tags
 
-            const journalsList = document.getElementById('publications-list');
-            const preprintsList = document.getElementById('preprints-list');
+            const publicationsGrid = document.getElementById('publications-grid');
             const outreachList = document.getElementById('outreach-list');
             const filterContainer = document.getElementById('pub-filters');
 
@@ -232,53 +231,67 @@ function loadPublications() {
 
             // Render Filters (Based on Papers tags only)
             if (filterContainer) {
-                filterContainer.innerHTML = `<button class="filter-btn active" data-filter="all">All</button>`;
+                filterContainer.innerHTML = `<button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>`;
                 Array.from(allTags).sort().forEach(tag => {
-                    filterContainer.innerHTML += `<button class="filter-btn" data-filter="${tag}">${tag}</button>`;
+                    filterContainer.innerHTML += `<button class="filter-btn" data-filter="${tag}" aria-pressed="false">${tag}</button>`;
                 });
 
                 // Add Filter Listeners
                 const buttons = filterContainer.querySelectorAll('.filter-btn');
                 buttons.forEach(btn => {
                     btn.addEventListener('click', () => {
-                        buttons.forEach(b => b.classList.remove('active'));
+                        buttons.forEach(b => {
+                            b.classList.remove('active');
+                            b.setAttribute('aria-pressed', 'false');
+                        });
                         btn.classList.add('active');
+                        btn.setAttribute('aria-pressed', 'true');
                         const filter = btn.getAttribute('data-filter');
                         renderPapers(filter);
                     });
                 });
             }
 
-            // Internal render function for PAPERS only
+            // Internal render function for PAPERS only (Bento Grid)
             const renderPapers = (filter) => {
-                // Clear lists
-                if (journalsList) journalsList.innerHTML = '';
-                if (preprintsList) preprintsList.innerHTML = '';
+                if (!publicationsGrid) return;
+                publicationsGrid.innerHTML = '';
 
-                papers.forEach(pub => {
+                papers.forEach((pub, index) => {
                     // Check filter
                     if (filter !== 'all' && !pub.tags.includes(filter)) return;
 
-                    const li = document.createElement('li');
-                    li.className = 'list-item';
+                    const div = document.createElement('div');
+                    
+                    // Asymmetric logic: make first item and every 4th item "featured" (wide)
+                    const isFeatured = filter === 'all' && (index === 0 || (index > 0 && index % 5 === 0));
+                    div.className = `bento-item ${isFeatured ? 'featured' : ''}`;
+                    div.setAttribute('data-aos', 'fade-up');
 
-                    let content = `<h3><a href="${pub.link}" target="_blank">${pub.title}</a></h3>`;
-                    content += `<span class="meta">${pub.venue}, ${pub.year}`;
-                    if (pub.doi && pub.doi !== '') {
-                        content += ` | DOI: ${pub.doi}`;
-                    }
-                    content += `</span>`;
+                    let html = `
+                        <div>
+                            <span class="type-tag">${pub.type}</span>
+                            <h3><a href="${pub.link}" target="_blank">${pub.title}</a></h3>
+                            <span class="meta">${pub.venue}, ${pub.year}${pub.doi ? ` | DOI: ${pub.doi}` : ''}</span>
+                        </div>
+                    `;
 
                     if (pub.tags.length > 0) {
-                        content += `<div class="card-tags" style="margin-top:0.5rem; justify-content: flex-start;">
-                            ${pub.tags.map(t => `<span class="student-tag" style="background:#f0f0f0; border:none;">${t}</span>`).join('')}
+                        html += `<div class="tags">
+                            ${pub.tags.map(t => `<span class="tag">${t}</span>`).join('')}
                         </div>`;
                     }
 
-                    li.innerHTML = content;
+                    div.innerHTML = html;
+                    
+                    // Interaction: clicking the card opens the link
+                    div.addEventListener('click', (e) => {
+                        if (e.target.tagName !== 'A') {
+                            window.open(pub.link, '_blank');
+                        }
+                    });
 
-                    if (pub.type === 'Journal' && journalsList) journalsList.appendChild(li);
-                    else if (pub.type === 'Preprint' && preprintsList) preprintsList.appendChild(li);
+                    publicationsGrid.appendChild(div);
                 });
             };
 
@@ -346,8 +359,8 @@ function startIntro() {
     (async () => {
         const text1 = "Hello there, I'm Antonio Desiderio";
         const text2 = " :D";
-        await typeWriter(greeting, text1, 100);
-        await new Promise(r => setTimeout(r, 800));
+        await typeWriter(greeting, text1, 80);
+        await new Promise(r => setTimeout(r, 1000)); // 1 second pause
         await typeWriter(greeting, text2, 100);
     })();
 
@@ -356,15 +369,20 @@ function startIntro() {
     introCube.scramble();
 
     // Start solve after small delay
-    setTimeout(() => {
-        introCube.solve(duration / 1000);
+    setTimeout(async () => {
+        console.log("Intro: Starting Cube Solve");
+        progressBar.style.transition = `transform ${duration}ms linear`;
+        progressBar.style.transform = 'scaleX(1)';
 
-        progressBar.style.transition = `width ${duration}ms linear`;
-        progressBar.style.width = '100%';
-
+        // Await the solve animation instead of relying on a blind setTimeout
+        await introCube.solve(duration / 1000);
+        console.log("Intro: Cube Solve Finished");
+        
+        // Add a small buffer after solve finishes
         setTimeout(() => {
+            console.log("Intro: Calling finishIntro");
             finishIntro(introOverlay, mainContent);
-        }, duration + 500);
+        }, 500);
 
     }, 500);
 }
@@ -440,9 +458,11 @@ function loadStudents(filter = 'all') {
                     <h3>${student.name}</h3>
                     <div class="card-tags">${tagsHtml}</div>
                 </div>
-                <div class="card-details">
-                    <p><strong>University:</strong> ${student.university}</p>
-                    <p><strong>Collaborators:</strong> ${student.collaborators}</p>
+                <div class="card-details-wrapper">
+                    <div class="card-details">
+                        <p><strong>University:</strong> ${student.university}</p>
+                        <p><strong>Collaborators:</strong> ${student.collaborators}</p>
+                    </div>
                 </div>
             </div>
             <div class="timeline-dot">${student.year}</div>
@@ -473,9 +493,13 @@ function setupStudentFilters() {
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
             // Remove active class
-            buttons.forEach(b => b.classList.remove('active'));
+            buttons.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+            });
             // Add active
             btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
 
             const filter = btn.getAttribute('data-filter');
 
@@ -626,13 +650,15 @@ function setupMobileNav() {
 
     if (hamburger) {
         hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isActive);
         });
 
         // Close on link click
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
             });
         });
     }

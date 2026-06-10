@@ -9,9 +9,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -31,6 +29,7 @@
 </head>
 
 <body>
+    <a href="#main-content" class="skip-link">Skip to Content</a>
     <canvas id="particles-canvas"></canvas>
 
     <!-- Intro Overlay -->
@@ -49,20 +48,20 @@
     <main id="main-content" class="hidden">
         <nav class="navbar">
             <div class="nav-logo">Antonio Desiderio</div>
-            <div class="hamburger">
+            <div class="hamburger" role="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-links" tabindex="0">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <ul class="nav-links">
+            <ul id="mobile-nav-links" class="nav-links">
                 <li><a href="#welcome" class="nav-link">About</a></li>
-                <li><a href="#jobs" class="nav-link">Jobs & Education</a></li>
+                <li><a href="#jobs" class="nav-link">Experience</a></li>
                 <li><a href="#publications" class="nav-link">Publications</a></li>
-                <li><a href="#students" class="nav-link">Students</a></li>
+                <li><a href="#students" class="nav-link">Supervision</a></li>
                 <li><a href="#collaborations" class="nav-link">Collaborations</a></li>
-                <li><a href="#behind-paper" class="nav-link">Behind the Paper</a></li>
-                <li><a href="#know-more" class="nav-link">To Know Me More</a></li>
-                <li><a href="play.html" class="nav-link">PLAY</a></li>
+                <li><a href="#behind-paper" class="nav-link">Inside the Research</a></li>
+                <li><a href="#know-more" class="nav-link">Interests</a></li>
+                <li><a href="play.html" class="nav-link">Playground</a></li>
             </ul>
         </nav>
 
@@ -74,13 +73,13 @@
                         <div id="welcome-text"></div>
                         <div id="contacts-container"></div>
                         <div class="mt-1">
-                            <a href="assets/cv.pdf" class="filter-btn no-decoration border-dark" download>Download
+                            <a href="assets/cv.pdf" class="filter-btn active no-decoration border-dark" download>Download
                                 CV</a>
                         </div>
                     </div>
                     <div class="profile-image-container">
                         <!-- Profile picture -->
-                        <img src="assets/profile.jpg" alt="Profile" class="profile-img">
+                        <img src="assets/profile.jpg" alt="Antonio Desiderio" class="profile-img" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -88,12 +87,12 @@
 
         <section id="jobs" class="section section-hidden">
             <div class="container">
-                <h2>Jobs & Education</h2>
+                <h2>Experience & Education</h2>
                 <ul id="jobs-list" class="item-list"></ul>
             </div>
             <div class="container mt-4">
                 <h3>Visiting & Grants</h3>
-                <p class="description mt-1">Placeholder for Visiting & Grants content...</p>
+                <p class="description mt-1">Details on visiting research and grants will be available here soon.</p>
             </div>
 
         </section>
@@ -106,37 +105,32 @@
                     <!-- Dynamic filters -->
                 </div>
 
-                <h3>Journal Papers</h3>
-                <ul id="publications-list" class="item-list"></ul>
-
-                <br>
-                <h3>Preprints</h3>
-                <ul id="preprints-list" class="item-list"></ul>
+                <div id="publications-grid" class="bento-grid">
+                    <!-- Dynamic bento items -->
+                </div>
 
                 <br>
 
             </div>
         </section>
 
-        </section>
-
 
         <section id="students" class="section section-hidden">
             <div class="container">
-                <h2>Co-Supervised Students</h2>
-                <p class="section-intro">These are students (Bachelor, Master, PhD and Fellows) that I have
-                    co-supervised through time. <br>
+                <h2>Supervision & Mentorship</h2>
+                <p class="section-intro">Students and researchers (Bachelor, Master, PhD, and Fellows) that I have
+                    co-supervised. <br>
                     They chart the trajectory of my work, enabling me to broaden my research focus.
                 </p>
 
-                <div class="filters-container">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="PhD">PhD</button>
-                    <button class="filter-btn" data-filter="Master">Master</button>
-                    <button class="filter-btn" data-filter="Bachelor">Bachelor</button>
-                    <button class="filter-btn" data-filter="Physics">Physics</button>
-                    <button class="filter-btn" data-filter="Computer Science">Computer Science</button>
-                    <button class="filter-btn" data-filter="Finance">Finance</button>
+                <div class="filters-container" role="group" aria-label="Filter students by category">
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="filter-btn" data-filter="PhD" aria-pressed="false">PhD</button>
+                    <button class="filter-btn" data-filter="Master" aria-pressed="false">Master</button>
+                    <button class="filter-btn" data-filter="Bachelor" aria-pressed="false">Bachelor</button>
+                    <button class="filter-btn" data-filter="Physics" aria-pressed="false">Physics</button>
+                    <button class="filter-btn" data-filter="Computer Science" aria-pressed="false">Computer Science</button>
+                    <button class="filter-btn" data-filter="Finance" aria-pressed="false">Finance</button>
                 </div>
 
                 <div class="timeline-container">
@@ -148,13 +142,12 @@
 
 
                 <!-- Student Notes -->
-                <!-- Student Notes -->
                 <div class="student-notes">
-                    <h3>Notes to Master Thesis</h3>
-                    <p>If you are a student, you are likely looking for this:<br><br></p>
+                    <h3>Master's Thesis Guide</h3>
+                    <p>Essential resources for prospective thesis students:<br><br></p>
 
                     <a href="assets/How_to_Master_Thesis.pdf" class="filter-btn active no-decoration" download>
-                        Download Notes
+                        Download Thesis Guide
                     </a>
 
                     <p class="description">
@@ -187,7 +180,7 @@
 
         <section id="behind-paper" class="section section-hidden">
             <div class="container">
-                <h2>Behind the Paper</h2>
+                <h2>Inside the Research</h2>
 
                 <!-- Moved from Publications -->
                 <h3>Outreach & Press</h3>
@@ -203,13 +196,13 @@
         <section id="know-more" class="section section-hidden">
             <canvas id="manga-canvas"></canvas>
             <div class="container">
-                <h2>To Know Me More</h2>
+                <h2>Beyond Research</h2>
                 <p class="intro-text">
-                    Manga have been an integral part of my life since I was little and have memory. <br>
-                    Here are some of the manga I love and consider important.
+                    Manga have been an integral part of my life since I was little. <br>
+                    Here are some of the series I love and consider important.
                 </p>
                 <ul id="manga-list" class="item-list manga-list"></ul>
-                <h3>I will add soon other stuff...</h3>
+                <h3>Updates on personal interests and side projects coming soon.</h3>
             </div>
         </section>
 

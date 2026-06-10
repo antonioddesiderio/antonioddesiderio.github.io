@@ -9,9 +9,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&family=Red+Hat+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <style>
@@ -27,6 +25,8 @@
             overflow-y: auto;
             flex-direction: column;
             background-color: var(--bg-color);
+            font-family: var(--font-body);
+            font-variation-settings: var(--font-settings-body);
         }
 
         .play-container {
@@ -78,7 +78,7 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -89,7 +89,7 @@
 
         .game-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(224, 0, 60, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border-color: var(--accent-color);
         }
 
@@ -119,6 +119,7 @@
 
         .game-card-title {
             font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 0.8rem;
@@ -139,6 +140,7 @@
             border: 2px solid var(--text-primary);
             background: transparent;
             font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -155,26 +157,33 @@
 
         .back-nav {
             position: absolute;
-            top: 40px;
-            left: 40px;
-            font-family: 'Space Mono', monospace;
+            top: var(--space-xl);
+            left: var(--space-xl);
+            font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             text-transform: uppercase;
         }
 
         .back-nav a {
             text-decoration: none;
-            color: #111;
-            font-weight: 700;
-            padding: 12px 24px;
-            border: 2px solid #111;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            color: var(--text-primary);
+            padding: var(--space-xs) var(--space-lg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: var(--step--1);
+            display: inline-block;
+            font-weight: 600;
         }
 
         .back-nav a:hover {
-            background-color: #111;
-            color: #fff;
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(224, 0, 60, 0.15);
         }
 
         @media (max-width: 768px) {
@@ -221,6 +230,7 @@
 
         .quote-author {
             font-family: var(--font-mono);
+            font-variation-settings: var(--font-settings-mono);
             font-size: 0.8rem;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -242,7 +252,7 @@
         <div class="games-grid">
             <a href="play_cube.html" class="game-card">
                 <div class="game-card-img-wrapper">
-                    <img src="assets/cube_preview.png" alt="Rubik's Cube" class="game-card-img">
+                    <img src="assets/cube_preview.png" alt="Rubik's Cube" class="game-card-img" loading="lazy">
                 </div>
                 <h2 class="game-card-title">Rubik's Cube</h2>
                 <p class="game-card-desc">Interactive 3D Rubik's Cube simulator. Drag pieces to rotate layers or click-drag outside to rotate the camera.</p>
@@ -251,7 +261,7 @@
 
             <a href="play_tetris.html" class="game-card">
                 <div class="game-card-img-wrapper">
-                    <img src="assets/tetris_preview.png" alt="Tetris" class="game-card-img">
+                    <img src="assets/tetris_preview.png" alt="Tetris" class="game-card-img" loading="lazy">
                 </div>
                 <h2 class="game-card-title">Tetris Classic</h2>
                 <p class="game-card-desc">Traditional block-puzzle game. Arrange falling blocks, clear lines, and beat your high score.</p>
@@ -260,7 +270,7 @@
 
             <a href="play_invaders.html" class="game-card">
                 <div class="game-card-img-wrapper">
-                    <img src="assets/invaders_preview.png" alt="Space Invaders" class="game-card-img">
+                    <img src="assets/invaders_preview.png" alt="Space Invaders" class="game-card-img" loading="lazy">
                 </div>
                 <h2 class="game-card-title">Space Invaders</h2>
                 <p class="game-card-desc">Defend Earth from the alien armada! Classic arcade shooter with an object-oriented twist.</p>
