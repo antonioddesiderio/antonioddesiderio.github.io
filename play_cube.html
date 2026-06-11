@@ -51,6 +51,10 @@
             text-decoration: none;
             color: var(--text-primary);
             padding: var(--space-xs) var(--space-lg);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.8);
@@ -90,7 +94,7 @@
     </style>
 </head>
 <body>
-    <canvas id="particles-canvas"></canvas>
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
     <div class="back-nav">
         <a href="play.html">← Back to Playground</a>

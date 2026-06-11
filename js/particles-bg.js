@@ -18,6 +18,8 @@ export class ParticleNetwork {
             'rgba(150, 150, 150, 0.6)'  // Level 5 (Farthest) - Grey
         ];
 
+        this.isPaused = false;
+
         this.resize();
         this.init();
 
@@ -33,6 +35,27 @@ export class ParticleNetwork {
             this.mouse.x = null;
             this.mouse.y = null;
         });
+
+        document.addEventListener('visibilitychange', () => {
+            this.isPaused = document.hidden;
+            if (!this.isPaused) this.animate();
+        });
+
+        // Pause particles if a game canvas is visible on screen
+        if ('IntersectionObserver' in window) {
+            this.gameObserver = new IntersectionObserver((entries) => {
+                const isGameVisible = entries.some(entry => entry.isIntersecting);
+                this.isPaused = isGameVisible;
+                if (!this.isPaused) {
+                    this.animate();
+                }
+            }, { threshold: 0.1 });
+            
+            setTimeout(() => {
+                const games = document.querySelectorAll('canvas:not(#particles-canvas):not(#manga-canvas)');
+                games.forEach(game => this.gameObserver.observe(game));
+            }, 500);
+        }
 
         this.animate();
     }
@@ -57,6 +80,7 @@ export class ParticleNetwork {
     }
 
     animate() {
+        if (this.isPaused) return;
         this.ctx.clearRect(0, 0, this.width, this.height);
 
         // Update and draw all particles first

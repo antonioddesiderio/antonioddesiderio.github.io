@@ -145,6 +145,10 @@
             text-decoration: none;
             color: var(--text-primary);
             padding: var(--space-xs) var(--space-lg);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.8);
@@ -204,7 +208,9 @@
 
     <div class="game-layout">
         <div class="canvas-container">
-            <canvas id="tetris" width="300" height="600"></canvas>
+            <canvas id="tetris" width="300" height="600" role="application" aria-label="Tetris interactive game">
+                <p>Your browser does not support HTML5 canvas, which is required to play Tetris.</p>
+            </canvas>
         </div>
 
         <div class="sidebar">

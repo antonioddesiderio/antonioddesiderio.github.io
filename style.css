@@ -592,10 +592,7 @@ a:hover {
 
 .manga-item:hover {
     transform: translateY(-6px) scale(1.01);
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.05),
-        0 0 0 1px rgba(224, 0, 60, 0.1),
-        0 0 20px rgba(224, 0, 60, 0.05);
+    box-shadow: 0 4px 12px rgba(224, 0, 60, 0.08);
     border-color: rgba(224, 0, 60, 0.4);
 }
 
@@ -815,10 +812,7 @@ footer {
 
 .student-card:hover {
     transform: translateX(6px) scale(1.01);
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.05),
-        0 0 0 1px rgba(224, 0, 60, 0.1),
-        0 0 20px rgba(224, 0, 60, 0.05);
+    box-shadow: 0 4px 12px rgba(224, 0, 60, 0.08);
     border-color: rgba(224, 0, 60, 0.4);
 }
 

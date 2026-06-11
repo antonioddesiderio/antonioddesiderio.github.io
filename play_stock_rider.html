@@ -421,6 +421,10 @@
             text-decoration: none;
             color: var(--text-primary);
             padding: 10px 24px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.9);
@@ -673,7 +677,9 @@
             </div>
 
             <!-- HTML5 Canvas -->
-            <canvas id="stockRiderCanvas" width="900" height="600"></canvas>
+            <canvas id="stockRiderCanvas" width="900" height="600" role="application" aria-label="Stock Rider interactive motocross game">
+                <p>Your browser does not support HTML5 canvas, which is required to play Stock Rider.</p>
+            </canvas>
         </div>
     </div>
 
