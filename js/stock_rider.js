@@ -282,7 +282,7 @@ class StockRider {
 
     initUI() {
         // Preset selectors
-        const selectors = document.querySelectorAll('#stock-selectors button');
+        const selectors = document.querySelectorAll('.stock-option-btn');
         selectors.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.currentTarget;
@@ -518,7 +518,7 @@ class StockRider {
                 setTimeout(() => { successAlert.style.display = 'none'; }, 4000);
 
                 // Selectors cleanup
-                const selectors = document.querySelectorAll('#stock-selectors button');
+                const selectors = document.querySelectorAll('.stock-option-btn');
                 selectors.forEach(b => b.classList.remove('active'));
 
                 this.generateTrack();
@@ -924,7 +924,7 @@ class StockRider {
         this.audio.playCoin();
         
         // Spawn green particles for score
-        this.spawnExplosion(coin.x, coin.y, '#23BC3F', 12, 3);
+        this.spawnExplosion(coin.x, coin.y, '#E0003C', 12, 3);
         
         // Update score HUD
         document.getElementById('hud-score').innerText = `$${this.score}`;
@@ -950,7 +950,7 @@ class StockRider {
         this.audio.stopEngine();
 
         // Spawn celebration confetti
-        this.spawnExplosion(this.bike.chassis.x, this.bike.chassis.y, '#23BC3F', 30, 5);
+        this.spawnExplosion(this.bike.chassis.x, this.bike.chassis.y, '#E0003C', 30, 5);
         this.spawnExplosion(this.bike.chassis.x, this.bike.chassis.y, '#ffffff', 30, 5);
 
         document.getElementById('win-score').innerText = `$${this.score}`;
@@ -1055,7 +1055,7 @@ class StockRider {
             const diff = price - prevPrice;
             const volHeight = Math.min(80, 20 + Math.abs(diff) * 1.5);
             
-            this.ctx.fillStyle = diff >= 0 ? 'rgba(35, 188, 63, 0.05)' : 'rgba(224, 0, 60, 0.05)';
+            this.ctx.fillStyle = diff >= 0 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(224, 0, 60, 0.05)';
             this.ctx.fillRect(x - 5, this.height + this.camY - volHeight, 10, volHeight);
 
             // Floating horizontal price labels at key points (peaks)
@@ -1080,10 +1080,10 @@ class StockRider {
         const finishX = this.runwayWidth + (this.prices.length - 1) * this.pxPerPoint;
         const finishY = this.getTerrainHeight(finishX);
         
-        this.ctx.fillStyle = 'rgba(35, 188, 63, 0.15)';
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
         this.ctx.fillRect(finishX, finishY - 400, 150, 400);
 
-        this.ctx.fillStyle = '#23BC3F';
+        this.ctx.fillStyle = '#E0003C';
         this.ctx.font = 'bold 12px "Space Mono", monospace';
         this.ctx.fillText("HODL FINISH LINE", finishX + 15, finishY - 120);
 
@@ -1117,7 +1117,7 @@ class StockRider {
 
             // Color code segments based on raw price delta
             const isUp = pt2.price >= pt1.price;
-            this.ctx.strokeStyle = isUp ? '#23BC3F' : '#E0003C';
+            this.ctx.strokeStyle = isUp ? '#ffffff' : '#E0003C';
             
             // Add slight glowing shadows to stock charts
             this.ctx.shadowBlur = 6;
@@ -1173,9 +1173,9 @@ class StockRider {
             // Soft floating oscillation
             const offset = Math.sin(performance.now() * 0.007 + coin.x) * 4;
             
-            this.ctx.fillStyle = 'rgba(35, 188, 63, 0.9)';
-            this.ctx.strokeStyle = '#23BC3F';
-            this.ctx.shadowColor = '#23BC3F';
+            this.ctx.fillStyle = 'rgba(224, 0, 60, 0.9)';
+            this.ctx.strokeStyle = '#ffffff';
+            this.ctx.shadowColor = '#ffffff';
             this.ctx.lineWidth = 2;
 
             // Draw buy icon (Green triangle pointing UP inside circle)
@@ -1376,8 +1376,8 @@ class StockRider {
         document.getElementById('hud-progress-rider').style.left = `${progressPercent}%`;
 
         // Speedometer (estimated in mph based on X velocity)
-        const speedMph = Math.round(Math.abs(this.bike.chassis.vx) / 8);
-        document.getElementById('hud-speed').innerText = `${speedMph} mph`;
+        const speedMph = (Math.abs(this.bike.chassis.vx) / 8).toFixed(2);
+        document.getElementById('hud-speed').innerText = speedMph;
         
         // Engine sound updates
         const throttleInput = this.keys.up ? 1.0 : (this.keys.down ? 0.2 : 0.0);

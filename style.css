@@ -6,15 +6,10 @@
     --accent-color: #E0003C;
 
     /* Typography */
-    --font-body: 'Recursive', sans-serif;
-    --font-display: 'Recursive', sans-serif;
-    --font-mono: 'Recursive', monospace;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-display: 'Instrument Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
 
-    /* Font Variation Settings (MONO, CASL) */
-    --font-settings-display: "MONO" 0, "CASL" 0.5;
-    --font-settings-body: "MONO" 0.5, "CASL" 0;
-    --font-settings-mono: "MONO" 1, "CASL" 0;
-    
     /* Fluid Type Scale */
     --step--1: clamp(0.8rem, 0.76rem + 0.19vw, 0.9375rem);
     --step-0: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
@@ -107,7 +102,6 @@
     transform: translateY(10px);
     transition: transform 0.3s ease, opacity 0.3s ease;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     pointer-events: auto;
 }
 
@@ -150,7 +144,6 @@
     z-index: 10000;
     text-decoration: none;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-weight: 600;
     border-radius: 0 0 var(--space-xs) var(--space-xs);
     transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -187,7 +180,6 @@ body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-variation-settings: var(--font-settings-body);
     font-size: var(--step-0);
     line-height: 1.6;
     overflow-x: hidden;
@@ -196,7 +188,6 @@ body {
 
 h1, h2, h3, .nav-logo {
     font-family: var(--font-display);
-    font-variation-settings: var(--font-settings-display);
     font-weight: 800;
     line-height: 1.1;
     text-wrap: balance;
@@ -304,7 +295,6 @@ a:hover {
 
 .bento-item .type-tag {
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: var(--step--1);
     color: var(--accent-color);
     text-transform: uppercase;
@@ -321,7 +311,6 @@ a:hover {
 
 .bento-item .meta {
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: var(--step--1);
     color: var(--text-secondary);
 }
@@ -459,7 +448,6 @@ a:hover {
 
 .nav-links a {
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: var(--step--1);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -542,7 +530,6 @@ a:hover {
 
 .list-item .meta {
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: var(--step--1);
     color: #888;
     margin-bottom: var(--space-xs);
@@ -662,7 +649,6 @@ footer {
     padding: 2rem 0;
     text-align: center;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: 0.8rem;
     color: #aaa;
 }
@@ -722,7 +708,6 @@ footer {
     border-radius: 30px;
     cursor: pointer;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-size: var(--step--1);
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -783,7 +768,6 @@ footer {
     z-index: 2;
     transition: transform 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
 }
 
 .timeline-item:hover .timeline-dot,
@@ -876,7 +860,6 @@ footer {
     border-radius: 4px;
     color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     border: 1px solid var(--border-color);
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -1015,7 +998,6 @@ footer {
 .popup-content {
     padding: 0.5rem;
     font-family: var(--font-body);
-    font-variation-settings: var(--font-settings-body);
 }
 
 .popup-content h3 {
@@ -1050,7 +1032,6 @@ footer {
     background-color: var(--accent-color);
     color: white;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     font-weight: bold;
 }
 
@@ -1170,7 +1151,6 @@ footer {
     margin-top: 2rem;
     margin-bottom: 0.5rem;
     font-family: var(--font-mono);
-    font-variation-settings: var(--font-settings-mono);
     color: var(--text-primary);
 }
 
