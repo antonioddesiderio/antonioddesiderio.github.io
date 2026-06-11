@@ -670,7 +670,7 @@ class StockRider {
     // ----------------------------------------------------
     // PHYSICS SOLVER
     // ----------------------------------------------------
-    resetGame() {
+    resetGame(isFullReset = true) {
         // Position rider at start of runway
         const startX = 140;
         const startY = this.getTerrainHeight(startX);
@@ -681,30 +681,35 @@ class StockRider {
         this.bike.chassis.vx = 0;
         this.bike.chassis.vy = 0;
 
-        // Rear Wheel
+        // Rear Wheel (initialize exactly on ground to prevent snap)
         this.bike.rear.x = startX - 25;
-        this.bike.rear.y = startY;
+        this.bike.rear.y = startY - this.wheelRadius;
         this.bike.rear.vx = 0;
         this.bike.rear.vy = 0;
-        this.bike.rear.onGround = false;
+        this.bike.rear.onGround = true;
         this.bike.rear.angle = 0;
 
-        // Front Wheel
+        // Front Wheel (initialize exactly on ground to prevent snap)
         this.bike.front.x = startX + 25;
-        this.bike.front.y = startY;
+        this.bike.front.y = startY - this.wheelRadius;
         this.bike.front.vx = 0;
         this.bike.front.vy = 0;
-        this.bike.front.onGround = false;
+        this.bike.front.onGround = true;
         this.bike.front.angle = 0;
 
         this.camX = 0;
         this.camY = 0;
         
-        // Reset coins and state
-        this.coins.forEach(c => c.active = true);
+        this.spawnTimer = 0.8; // Invulnerability frames to prevent spawn crashes
         this.particles = [];
-        this.score = 0;
-        this.startTime = performance.now();
+
+        if (isFullReset) {
+            this.coins.forEach(c => c.active = true);
+            this.score = 0;
+            this.lives = 3;
+            this.startTime = performance.now();
+        }
+
         this.isGameOver = false;
         this.isWin = false;
 
@@ -714,6 +719,12 @@ class StockRider {
         document.getElementById('hud-price').innerText = `$${this.prices[0].toFixed(2)}`;
         document.getElementById('hud-score').innerText = `$${this.score}`;
         document.getElementById('hud-speed').innerText = `0 mph`;
+        
+        const livesEl = document.getElementById('hud-lives');
+        if (livesEl) {
+            livesEl.innerText = "📈 📈 📈";
+            livesEl.style.color = "#23BC3F";
+        }
     }
 
     updatePhysics(dt) {
@@ -882,6 +893,7 @@ class StockRider {
 
     checkGameStates() {
         if (this.isGameOver || this.isWin) return;
+        if (this.spawnTimer > 0) return; // Invulnerability active
 
         const chassis = this.bike.chassis;
         const groundHeight = this.getTerrainHeight(chassis.x);
@@ -923,25 +935,33 @@ class StockRider {
         this.score += coin.val;
         this.audio.playCoin();
         
-        // Spawn green particles for score
-        this.spawnExplosion(coin.x, coin.y, '#E0003C', 12, 3);
+        // Spawn green particles for score (BUY coin is green, not red!)
+        this.spawnExplosion(coin.x, coin.y, '#23BC3F', 12, 3);
         
         // Update score HUD
         document.getElementById('hud-score').innerText = `$${this.score}`;
     }
 
     triggerGameOver() {
-        this.isGameOver = true;
         this.crashes++;
         this.audio.playCrash();
-        this.audio.stopEngine();
 
         // Spawn massive explosion particles
         this.spawnExplosion(this.bike.chassis.x, this.bike.chassis.y, '#E0003C', 35, 6);
         this.spawnExplosion(this.bike.chassis.x, this.bike.chassis.y, '#ffffff', 15, 4);
 
-        document.getElementById('final-score').innerText = `$${this.score}`;
-        document.getElementById('game-over-screen').style.display = 'flex';
+        if (this.lives > 1) {
+            // Respawn (lose 1 life)
+            this.lives--;
+            this.resetGame(false);
+        } else {
+            // Out of lives (Margin Call)
+            this.lives = 0;
+            this.isGameOver = true;
+            this.audio.stopEngine();
+            document.getElementById('final-score').innerText = `$${this.score}`;
+            document.getElementById('game-over-screen').style.display = 'flex';
+        }
     }
 
     triggerWin() {
@@ -1372,12 +1392,24 @@ class StockRider {
         const currentDist = Math.max(0, Math.min(totalDist, this.bike.chassis.x - startX));
         const progressPercent = (currentDist / totalDist) * 100;
 
-        document.getElementById('hud-progress-bar').style.transform = `scaleX(${progressPercent / 100})`;
+        document.getElementById('hud-progress-bar').style.width = `${progressPercent}%`;
         document.getElementById('hud-progress-rider').style.left = `${progressPercent}%`;
 
         // Speedometer (estimated in mph based on X velocity)
-        const speedMph = (Math.abs(this.bike.chassis.vx) / 8).toFixed(2);
-        document.getElementById('hud-speed').innerText = speedMph;
+        const speedMph = Math.round(Math.abs(this.bike.chassis.vx) / 8);
+        document.getElementById('hud-speed').innerText = `${speedMph} mph`;
+
+        // Lives HUD update
+        const livesEl = document.getElementById('hud-lives');
+        if (livesEl) {
+            if (this.lives > 0) {
+                livesEl.innerText = "📈 ".repeat(this.lives).trim();
+                livesEl.style.color = this.lives === 1 ? "#E0003C" : "#23BC3F";
+            } else {
+                livesEl.innerText = "Liquidated";
+                livesEl.style.color = "#E0003C";
+            }
+        }
         
         // Engine sound updates
         const throttleInput = this.keys.up ? 1.0 : (this.keys.down ? 0.2 : 0.0);
@@ -1406,6 +1438,9 @@ class StockRider {
 
         if (this.isStarted) {
             if (!this.isGameOver && !this.isWin) {
+                if (this.spawnTimer > 0) {
+                    this.spawnTimer -= dt;
+                }
                 this.updatePhysics(dt);
                 this.checkGameStates();
             }
