@@ -199,33 +199,118 @@ class StockRider {
         this.trackPoints = []; // [{x, y, rawPrice}]
         this.coins = [];       // [{x, y, active}]
         
-        // Physics constants
-        this.gravity = 500;            // px/s^2
-        this.enginePower = 700;       // Rear wheel push force
-        this.maxForwardSpeed = 380;   // Limit forward velocity
-        this.brakePower = 8.0;        // Brake deceleration rate
-        this.leanTorque = 450;        // Rotational force
-        this.airDrag = 0.08;          // Air resistance coefficient
-        
-        // Wheel Base dimensions
-        this.wheelRadius = 11;
-        this.massChassis = 1.2;
-        this.massWheel = 0.4;
+        // ---- Physics dimensions (stonkrider.com exact values: Bl, Vl, Hl, Ul, Wl) ----
+        this.WHEEL_RADIUS  = 14;   // Bl
+        this.FRAME_WIDTH   = 42;   // Vl
+        this.FRAME_HEIGHT  = 12;   // Hl
+        this.WHEEL_SPACING = 70;   // Ul – full wheel-to-wheel distance
+        this.FRAME_ABOVE   = 20;   // Wl – frame centre sits this far above wheel centre
+        this.wheelRadius   = this.WHEEL_RADIUS; // alias used by rendering code
 
-        // Suspension Springs
-        // chassis-rear, chassis-front, rear-front
-        this.springs = [
-            { id: 'rear_susp', restLength: 29, k: 1400, c: 45, pA: 'chassis', pB: 'rear' },
-            { id: 'front_susp', restLength: 29, k: 1400, c: 45, pA: 'chassis', pB: 'front' },
-            { id: 'wheelbase', restLength: 53, k: 2500, c: 55, pA: 'rear', pB: 'front' }
-        ];
+        // Fixed-step accumulator – stonkrider locks physics at 60 Hz, no sub-stepping
+        this.FIXED_STEP = 1000 / 60; // ms per tick (≈16.67 ms)
+        this.accumulator = 0;
 
-        // Mass points definition
+        // Force constants from stonkrider bundle (Gl, ql, Kl, Yl)
+        this.Gl = 0.7;   // angular-velocity threshold before drive force applies
+        this.ql = 0.013; // drive force magnitude per tick
+        this.Kl = 14;    // forward speed at which drive force → 0
+        this.Yl = 0.007; // lean couple force magnitude per arm
+
+        // Matter.js engine – default gravity y=1, same as stonkrider
+        this.matterEngine = Matter.Engine.create();
+        this.matterEngine.gravity.y = 1;
+        this.matterWorld = this.matterEngine.world;
+
+        // Visual-state snapshots (kept so HUD / rendering needs no changes)
         this.bike = {
-            chassis: { x: 0, y: 0, vx: 0, vy: 0, m: this.massChassis },
-            rear:    { x: 0, y: 0, vx: 0, vy: 0, m: this.massWheel, onGround: false, angle: 0 },
-            front:   { x: 0, y: 0, vx: 0, vy: 0, m: this.massWheel, onGround: false, angle: 0 }
+            chassis: { x: 0, y: 0, vx: 0, vy: 0, angle: 0 },
+            rear:    { x: 0, y: 0, vx: 0, vy: 0, onGround: false, angle: 0 },
+            front:   { x: 0, y: 0, vx: 0, vy: 0, onGround: false, angle: 0 }
         };
+
+        // ---- Matter.js bodies (stonkrider Xl function) ----
+        const tx = 140, ty = 500;
+        const frameY = ty - this.WHEEL_RADIUS - this.FRAME_ABOVE; // frame centre y
+        const wheelY = ty - this.WHEEL_RADIUS;                     // wheel centre y
+
+        // Frame – mask:0 means it never physically collides with anything;
+        // constraints hold it in place above the wheels.
+        this.bike.frameBody = Matter.Bodies.rectangle(tx, frameY, this.FRAME_WIDTH, this.FRAME_HEIGHT, {
+            mass: 4,
+            friction: 0.5,
+            frictionAir: 0.005,
+            restitution: 0.05,
+            label: 'frame',
+            collisionFilter: { group: -1, mask: 0 }
+        });
+
+        // Rear wheel – group -1 means it ignores other group-(-1) bodies
+        // (frame, guard) but still rolls on terrain (group 0).
+        this.bike.rearBody = Matter.Bodies.circle(tx - this.WHEEL_SPACING / 2, wheelY, this.WHEEL_RADIUS, {
+            mass: 1.2,
+            friction: 0.9,
+            frictionAir: 0.001,
+            restitution: 0.02,
+            label: 'wheel',
+            collisionFilter: { group: -1 }
+        });
+
+        // Front wheel
+        this.bike.frontBody = Matter.Bodies.circle(tx + this.WHEEL_SPACING / 2, wheelY, this.WHEEL_RADIUS, {
+            mass: 1.2,
+            friction: 0.9,
+            frictionAir: 0.001,
+            restitution: 0.02,
+            label: 'wheel',
+            collisionFilter: { group: -1 }
+        });
+
+        // Guard / rider mass – bobbing body above frame (stonkrider guard body)
+        const guardY = frameY + this.FRAME_HEIGHT / 2 + 10;
+        this.bike.guardBody = Matter.Bodies.circle(tx, guardY, 10, {
+            mass: 0.1,
+            friction: 0.3,
+            restitution: 0,
+            label: 'guard',
+            collisionFilter: { group: -1 }
+        });
+
+        // ---- Constraints – stonkrider exact setup ----
+        const sd  = { stiffness: 0.6, damping: 0.25 }; // suspension defaults
+        const lUp = Math.sqrt(980);  // upper spring natural length ≈ 31.3 px
+        const lLo = Math.sqrt(340);  // lower spring natural length ≈ 18.4 px
+        const cX  = this.FRAME_WIDTH / 2; // front-side attachment x on frame (= 21)
+        const Jl  = 8;                    // lower attachment y on frame
+
+        // Four suspension springs: upper + lower for each wheel
+        const rearUpper  = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x: -cX, y: -8 }, bodyB: this.bike.rearBody,  length: lUp, ...sd });
+        const rearLower  = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x: -cX, y: Jl  }, bodyB: this.bike.rearBody,  length: lLo, ...sd });
+        const frontUpper = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x:  cX, y: -8 }, bodyB: this.bike.frontBody, length: lUp, ...sd });
+        const frontLower = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x:  cX, y: Jl  }, bodyB: this.bike.frontBody, length: lLo, ...sd });
+
+        // Axle link – keeps wheels at the correct spacing
+        const axleLink  = Matter.Constraint.create({ bodyA: this.bike.rearBody, bodyB: this.bike.frontBody, length: this.WHEEL_SPACING, ...sd });
+
+        // Guard neck – length:0, stiffness:1 = nearly rigid
+        const guardNeck = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x: 0, y: 16 }, bodyB: this.bike.guardBody, length: 0, stiffness: 1, damping: 0.1 });
+
+        this.bikeConstraints = [rearUpper, rearLower, frontUpper, frontLower, axleLink, guardNeck];
+
+        Matter.Composite.add(this.matterWorld, [
+            this.bike.frameBody,
+            this.bike.rearBody,
+            this.bike.frontBody,
+            this.bike.guardBody,
+            ...this.bikeConstraints
+        ]);
+
+        this.terrainBodies = [];
+
+        // Persist ground state between ticks (stonkrider: R and ue are loop-scoped vars
+        // that carry over from the previous Engine.update step)
+        this.rearOnGround  = false;
+        this.frontOnGround = false;
 
         // Track constraints
         this.runwayWidth = 400;
@@ -622,6 +707,45 @@ class StockRider {
             trendEl.className = "hud-price-trend trend-down";
         }
 
+        // Build Matter.js static segment bodies for the track
+        if (this.terrainBodies && this.terrainBodies.length > 0) {
+            Matter.Composite.remove(this.matterWorld, this.terrainBodies);
+        }
+        this.terrainBodies = [];
+
+        for (let i = 0; i < this.trackPoints.length - 1; i++) {
+            const pt1 = this.trackPoints[i];
+            const pt2 = this.trackPoints[i + 1];
+            const dx = pt2.x - pt1.x;
+            const dy = pt2.y - pt1.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx);
+            
+            // Stonkrider exact terrain creation
+            // Offset downward by half the thickness (15) so the TOP edge aligns with the track line
+            const thickness = 30;
+            const offsetX = -Math.sin(angle) * (thickness / 2);
+            const offsetY = Math.cos(angle) * (thickness / 2);
+
+            const segmentBody = Matter.Bodies.rectangle(
+                pt1.x + dx * 0.5 + offsetX,
+                pt1.y + dy * 0.5 + offsetY,
+                len + 4, // slight overlap
+                thickness,
+                {
+                    isStatic: true,
+                    angle: angle,
+                    friction: 0.8,
+                    restitution: 0,
+                    chamfer: { radius: 6 }, // CRITICAL: prevents wheels from snagging on segment seams!
+                    label: 'terrain',
+                    collisionFilter: { category: 0x0001 } // category 1: terrain collides with wheels
+                }
+            );
+            this.terrainBodies.push(segmentBody);
+        }
+        Matter.Composite.add(this.matterWorld, this.terrainBodies);
+
         this.resetGame();
     }
 
@@ -675,23 +799,58 @@ class StockRider {
         const startX = 140;
         const startY = this.getTerrainHeight(startX);
 
-        // Chassis sits slightly higher
+        // Compute start positions for all bodies
+        const frameStartY = startY - this.WHEEL_RADIUS - this.FRAME_ABOVE;
+        const wheelStartY = startY - this.WHEEL_RADIUS;
+        const guardStartY = frameStartY + this.FRAME_HEIGHT / 2 + 10;
+
+        // Clear accumulator and ground state so no phantom forces carry over between resets
+        this.accumulator   = 0;
+        this.rearOnGround  = false;
+        this.frontOnGround = false;
+
+        // Reposition Matter.js bodies (stonkrider au function)
+        if (this.bike.rearBody) {
+            Matter.Body.setPosition(this.bike.rearBody, { x: startX - this.WHEEL_SPACING / 2, y: wheelStartY });
+            Matter.Body.setVelocity(this.bike.rearBody, { x: 0, y: 0 });
+            Matter.Body.setAngularVelocity(this.bike.rearBody, 0);
+        }
+
+        if (this.bike.frontBody) {
+            Matter.Body.setPosition(this.bike.frontBody, { x: startX + this.WHEEL_SPACING / 2, y: wheelStartY });
+            Matter.Body.setVelocity(this.bike.frontBody, { x: 0, y: 0 });
+            Matter.Body.setAngularVelocity(this.bike.frontBody, 0);
+        }
+
+        if (this.bike.frameBody) {
+            Matter.Body.setPosition(this.bike.frameBody, { x: startX, y: frameStartY });
+            Matter.Body.setVelocity(this.bike.frameBody, { x: 0, y: 0 });
+            Matter.Body.setAngle(this.bike.frameBody, 0);
+            Matter.Body.setAngularVelocity(this.bike.frameBody, 0);
+        }
+
+        if (this.bike.guardBody) {
+            Matter.Body.setPosition(this.bike.guardBody, { x: startX, y: guardStartY });
+            Matter.Body.setVelocity(this.bike.guardBody, { x: 0, y: 0 });
+            Matter.Body.setAngularVelocity(this.bike.guardBody, 0);
+        }
+
+        // Keep visual snapshots in sync
         this.bike.chassis.x = startX;
-        this.bike.chassis.y = startY - 26;
+        this.bike.chassis.y = frameStartY;
         this.bike.chassis.vx = 0;
         this.bike.chassis.vy = 0;
+        this.bike.chassis.angle = 0;
 
-        // Rear Wheel (initialize exactly on ground to prevent snap)
-        this.bike.rear.x = startX - 25;
-        this.bike.rear.y = startY - this.wheelRadius;
+        this.bike.rear.x = startX - this.WHEEL_SPACING / 2;
+        this.bike.rear.y = wheelStartY;
         this.bike.rear.vx = 0;
         this.bike.rear.vy = 0;
         this.bike.rear.onGround = true;
         this.bike.rear.angle = 0;
 
-        // Front Wheel (initialize exactly on ground to prevent snap)
-        this.bike.front.x = startX + 25;
-        this.bike.front.y = startY - this.wheelRadius;
+        this.bike.front.x = startX + this.WHEEL_SPACING / 2;
+        this.bike.front.y = wheelStartY;
         this.bike.front.vx = 0;
         this.bike.front.vy = 0;
         this.bike.front.onGround = true;
@@ -727,168 +886,157 @@ class StockRider {
         }
     }
 
+    // Ground detection using Matter.Query.region() – exactly as stonkrider Zl/Ql functions.
+    // This is FAR more accurate than y-position math, especially on slopes.
+    isWheelOnGround(wheelBody) {
+        const bounds = {
+            min: { x: wheelBody.bounds.min.x - 2, y: wheelBody.bounds.min.y - 2 },
+            max: { x: wheelBody.bounds.max.x + 2, y: wheelBody.bounds.max.y + 2 }
+        };
+        return Matter.Query.region(this.terrainBodies, bounds).length > 0;
+    }
+
     updatePhysics(dt) {
-        // Solve using sub-stepping to ensure spring stability
-        const subSteps = 6;
-        const subDt = dt / subSteps;
+        // Fixed-step accumulator – exact stonkrider rt() pattern
+        this.accumulator += dt * 1000;
+        this.accumulator = Math.min(this.accumulator, 4 * this.FIXED_STEP);
 
-        for (let step = 0; step < subSteps; step++) {
-            // 1. Apply Gravity to all points
-            for (let name of ['chassis', 'rear', 'front']) {
-                const pt = this.bike[name];
-                pt.vy += this.gravity * subDt;
-            }
+        while (this.accumulator >= this.FIXED_STEP) {
+            const frame = this.bike.frameBody;
+            const rear  = this.bike.rearBody;
+            const front = this.bike.frontBody;
 
-            // 2. Air resistance / general damping
-            for (let name of ['chassis', 'rear', 'front']) {
-                const pt = this.bike[name];
-                pt.vx *= (1 - this.airDrag * subDt);
-                pt.vy *= (1 - this.airDrag * subDt);
-            }
+            // Stonkrider rt() order:
+            // 1. Apply forces using PREVIOUS tick's ground state (R, ue)
+            // 2. Engine.update()
+            // 3. Re-query ground state for NEXT tick
+            const anyOnGround  = this.rearOnGround || this.frontOnGround; // R (prev tick)
+            const bothOnGround = this.rearOnGround && this.frontOnGround; // ue (prev tick)
 
-            // 3. User Lean Input (Torque)
-            // Normal perpendicular vector to wheelbase link
-            const dx = this.bike.front.x - this.bike.rear.x;
-            const dy = this.bike.front.y - this.bike.rear.y;
-            const len = Math.sqrt(dx * dx + dy * dy);
-            if (len > 0) {
-                const nx = -dy / len;
-                const ny = dx / len; // CCW perpendicular vector (pointing up)
-
-                let rotateForce = 0;
-                if (this.keys.left) rotateForce += this.leanTorque;   // Lean back
-                if (this.keys.right) rotateForce -= this.leanTorque;  // Lean forward
-
-                if (rotateForce !== 0) {
-                    // CCW: front wheel goes UP (-N), rear wheel goes DOWN (+N)
-                    this.bike.front.vx -= nx * rotateForce * subDt;
-                    this.bike.front.vy -= ny * rotateForce * subDt;
-                    this.bike.rear.vx += nx * rotateForce * subDt;
-                    this.bike.rear.vy += ny * rotateForce * subDt;
-                }
-            }
-
-            // 4. Update coordinates by velocity
-            for (let name of ['chassis', 'rear', 'front']) {
-                const pt = this.bike[name];
-                pt.x += pt.vx * subDt;
-                pt.y += pt.vy * subDt;
-            }
-
-            // 5. Solve Spring Constraints (Hooke's law + damping)
-            for (let spring of this.springs) {
-                const ptA = this.bike[spring.pA];
-                const ptB = this.bike[spring.pB];
-
-                const sDx = ptB.x - ptA.x;
-                const sDy = ptB.y - ptA.y;
-                const dist = Math.sqrt(sDx * sDx + sDy * sDy);
-                if (dist > 0) {
-                    const ux = sDx / dist;
-                    const uy = sDy / dist;
-
-                    // Stretch/compression
-                    const stretch = dist - spring.restLength;
-                    const fSpring = spring.k * stretch;
-
-                    // Relative velocity damping
-                    const rvx = ptB.vx - ptA.vx;
-                    const rvy = ptB.vy - ptA.vy;
-                    const rval = rvx * ux + rvy * uy;
-                    const fDamp = spring.c * rval;
-
-                    const force = fSpring + fDamp;
-
-                    // Distribute forces to points
-                    ptA.vx += (force * ux * subDt) / ptA.m;
-                    ptA.vy += (force * uy * subDt) / ptA.m;
-                    ptB.vx -= (force * ux * subDt) / ptB.m;
-                    ptB.vy -= (force * uy * subDt) / ptB.m;
-                }
-            }
-
-            // 6. Resolve Wheel Collisions with Ground
-            for (let name of ['rear', 'front']) {
-                const wheel = this.bike[name];
-                const groundY = this.getTerrainHeight(wheel.x);
-
-                if (wheel.y >= groundY - this.wheelRadius) {
-                    wheel.y = groundY - this.wheelRadius;
-                    wheel.onGround = true;
-
-                    // Calculate ground normal and tangent
-                    const sampleDist = 2;
-                    const hLeft = this.getTerrainHeight(wheel.x - sampleDist);
-                    const hRight = this.getTerrainHeight(wheel.x + sampleDist);
-                    const slope = (hRight - hLeft) / (sampleDist * 2);
-                    const angle = Math.atan(slope);
-
-                    const tx = Math.cos(angle);
-                    const ty = Math.sin(angle); // Ground tangent (points right/forward)
-                    const nx = ty;
-                    const ny = -tx;             // Ground normal (points up/out)
-
-                    // Project velocity components
-                    let vN = wheel.vx * nx + wheel.vy * ny;
-                    let vT = wheel.vx * tx + wheel.vy * ty;
-
-                    // If moving into ground, reflect normal component
-                    if (vN > 0) {
-                        vN = -vN * 0.12; // light recoil bounce
+            // --- Throttle: stonkrider $l(w, b, x, R) ---
+            // Angular-velocity ramp always uses a LIVE rear-wheel query (Zl inside $l)
+            // but the forward-drive FORCE only fires when anyOnGround was true last tick (r=R).
+            if (this.keys.up) {
+                const rearLive = this.isWheelOnGround(rear); // Zl – live query
+                if (rearLive) {
+                    const av = rear.angularVelocity;
+                    if (av < this.Gl) {
+                        Matter.Body.setAngularVelocity(rear, av + 0.03);
                     }
-
-                    // Apply engine throttle to rear wheel
-                    if (name === 'rear') {
-                        if (this.keys.up) {
-                            // Accelerate forward
-                            vT += this.enginePower * subDt;
-                            if (vT > this.maxForwardSpeed) vT = this.maxForwardSpeed;
-                            
-                            // Wheel spinning visual rotation
-                            wheel.angle += 0.45;
-
-                            // Reaction tilt: apply clockwise rotation force to chassis to tip bike back slightly
-                            this.bike.chassis.vx -= tx * 140 * subDt;
-                            this.bike.chassis.vy -= ty * 140 * subDt;
-                        } else if (this.keys.down) {
-                            // Brake or Reverse
-                            if (vT > 5) {
-                                vT *= Math.max(0, 1 - this.brakePower * subDt); // braking deceleration
-                            } else {
-                                vT -= 200 * subDt; // slow reverse
-                                if (vT < -120) vT = -120;
+                    if (anyOnGround) { // !r guard in $l – force only when prev-tick anyOnGround
+                        const speedFactor = Math.max(0, 1 - frame.velocity.x / this.Kl);
+                        if (speedFactor > 0) {
+                            const force = this.ql * speedFactor;
+                            let fx = force, fy = 0;
+                            for (let i = 0; i < this.trackPoints.length - 1; i++) {
+                                if (this.trackPoints[i + 1].x >= rear.position.x) {
+                                    const tdx = this.trackPoints[i + 1].x - this.trackPoints[i].x;
+                                    const tdy = this.trackPoints[i + 1].y - this.trackPoints[i].y;
+                                    const tlen = Math.sqrt(tdx * tdx + tdy * tdy) || 1;
+                                    fx = (tdx / tlen) * force;
+                                    fy = (tdy / tlen) * force;
+                                    break;
+                                }
                             }
-                            wheel.angle -= 0.15;
-                        } else {
-                            // Friction/Rolling resistance when coasting
-                            vT *= Math.max(0, 1 - 0.5 * subDt);
-                            wheel.angle += vT * subDt / this.wheelRadius;
+                            Matter.Body.applyForce(rear, rear.position, { x: fx, y: fy });
                         }
-                    } else {
-                        // Front wheel rolling resistance
-                        vT *= Math.max(0, 1 - 0.2 * subDt);
-                        wheel.angle += vT * subDt / this.wheelRadius;
                     }
-
-                    // Reconstruct velocity
-                    wheel.vx = vN * nx + vT * tx;
-                    wheel.vy = vN * ny + vT * ty;
-                } else {
-                    wheel.onGround = false;
-                    // In-air wheel spin deceleration
-                    wheel.angle += (name === 'rear' && this.keys.up ? 0.3 : 0.0) - (wheel.vx * subDt / 100);
                 }
             }
 
-            // 7. Bounds lock (cannot go left of screen start)
-            for (let name of ['chassis', 'rear', 'front']) {
-                const pt = this.bike[name];
-                if (pt.x < 15) {
-                    pt.x = 15;
-                    pt.vx = 0;
-                }
+            // --- Brake ---
+            if (this.keys.down) {
+                Matter.Body.setAngularVelocity(rear,  rear.angularVelocity  * 0.9);
+                Matter.Body.setAngularVelocity(front, front.angularVelocity * 0.9);
+            }
+
+            // --- Lean: stonkrider eu(w, 1) / eu(w, -1) ---
+            const leanDir = this.keys.left ? 1 : (this.keys.right ? -1 : 0);
+            if (leanDir !== 0) {
+                const cos  = Math.cos(frame.angle);
+                const sin  = Math.sin(frame.angle);
+                const arm  = this.FRAME_WIDTH / 2; // 21 px = Vl/2
+                const fMag = this.Yl * leanDir;
+                const o    = -sin * fMag; // stonkrider: o = -i*Yl*t
+                const s    =  cos * fMag; // stonkrider: s =  r*Yl*t
+                const fPt  = { x: frame.position.x + cos * arm, y: frame.position.y + sin * arm };
+                const rPt  = { x: frame.position.x - cos * arm, y: frame.position.y - sin * arm };
+                Matter.Body.applyForce(frame, fPt, { x: -o, y: -s });
+                Matter.Body.applyForce(frame, rPt, { x:  o, y:  s });
+            }
+
+            // --- Angular stabilisation: stonkrider rt() inner block ---
+            const trackAngle = this.getTrackAngleAt(frame.position.x);
+            const av = frame.angularVelocity;
+            if (bothOnGround) {
+                const corr = (trackAngle - frame.angle) * 0.18 - av * 0.1;
+                Matter.Body.setAngularVelocity(frame, av + corr);
+            } else if (anyOnGround) {
+                Matter.Body.setAngularVelocity(frame, av * 0.98);
+            } else {
+                Matter.Body.setAngularVelocity(frame, av * 0.96);
+            }
+            const curAV = frame.angularVelocity;
+            if (Math.abs(curAV) > 0.08) {
+                Matter.Body.setAngularVelocity(frame, Math.sign(curAV) * 0.08);
+            }
+
+            // --- Engine step ---
+            Matter.Engine.update(this.matterEngine, this.FIXED_STEP);
+
+            // --- Re-query ground state (stored for NEXT tick, exactly as stonkrider) ---
+            this.rearOnGround  = this.isWheelOnGround(rear);
+            this.frontOnGround = this.isWheelOnGround(front);
+
+            this.accumulator -= this.FIXED_STEP;
+        }
+
+        // Sync visual snapshot objects from physics bodies
+        const rear  = this.bike.rearBody;
+        const front = this.bike.frontBody;
+        const frame = this.bike.frameBody;
+
+        this.bike.rear.x        = rear.position.x;
+        this.bike.rear.y        = rear.position.y;
+        this.bike.rear.vx       = rear.velocity.x;
+        this.bike.rear.vy       = rear.velocity.y;
+        this.bike.rear.angle    = rear.angle;
+        this.bike.rear.onGround = this.rearOnGround;
+
+        this.bike.front.x        = front.position.x;
+        this.bike.front.y        = front.position.y;
+        this.bike.front.vx       = front.velocity.x;
+        this.bike.front.vy       = front.velocity.y;
+        this.bike.front.angle    = front.angle;
+        this.bike.front.onGround = this.frontOnGround;
+
+        this.bike.chassis.x     = frame.position.x;
+        this.bike.chassis.y     = frame.position.y;
+        this.bike.chassis.vx    = frame.velocity.x;
+        this.bike.chassis.vy    = frame.velocity.y;
+        this.bike.chassis.angle = frame.angle;
+
+        // Left boundary guard
+        if (rear.position.x < 15) {
+            Matter.Body.setPosition(rear,  { x: 15, y: rear.position.y });
+            Matter.Body.setVelocity(rear,  { x: 0,  y: rear.velocity.y });
+        }
+        if (front.position.x < 15) {
+            Matter.Body.setPosition(front, { x: 15, y: front.position.y });
+            Matter.Body.setVelocity(front, { x: 0,  y: front.velocity.y });
+        }
+    }
+
+    // Return terrain slope angle (radians) at world-space X – stonkrider rt() inner loop
+    getTrackAngleAt(x) {
+        for (let i = 0; i < this.trackPoints.length - 1; i++) {
+            if (this.trackPoints[i + 1].x >= x) {
+                const dx = this.trackPoints[i + 1].x - this.trackPoints[i].x;
+                const dy = this.trackPoints[i + 1].y - this.trackPoints[i].y;
+                return Math.atan2(dy, dx);
             }
         }
+        return 0;
     }
 
     checkGameStates() {
@@ -896,17 +1044,20 @@ class StockRider {
         if (this.spawnTimer > 0) return; // Invulnerability active
 
         const chassis = this.bike.chassis;
-        const groundHeight = this.getTerrainHeight(chassis.x);
 
-        // 1. Crash Condition: Chassis hits the ground (e.g. rider head-plant or chassis bottom out)
-        if (chassis.y >= groundHeight - 8) {
+        // 1. Crash Condition: Rider's head/helmet hits the ground
+        const headX = this.bike.guardBody.position.x;
+        const headY = this.bike.guardBody.position.y;
+        const headGroundHeight = this.getTerrainHeight(headX);
+
+        if (headY >= headGroundHeight - 4) {
             this.triggerGameOver();
             return;
         }
 
         // Extra protection: If both wheels are off the ground, but chassis is lower than wheels (severe tilt/flip)
         const avgWheelsY = (this.bike.rear.y + this.bike.front.y) / 2;
-        if (chassis.y > avgWheelsY + 12) {
+        if (chassis.y > avgWheelsY + 16) {
             this.triggerGameOver();
             return;
         }
@@ -1233,8 +1384,8 @@ class StockRider {
         const pf = this.bike.front;
 
         // Draw suspensions (spring lines)
-        this.ctx.strokeStyle = '#444';
-        this.ctx.lineWidth = 3.5;
+        this.ctx.strokeStyle = '#2d2d30';
+        this.ctx.lineWidth = 3;
         this.ctx.beginPath();
         this.ctx.moveTo(pc.x, pc.y);
         this.ctx.lineTo(pr.x, pr.y);
@@ -1242,43 +1393,52 @@ class StockRider {
         this.ctx.lineTo(pf.x, pf.y);
         this.ctx.stroke();
 
-        // Draw chassis main frame link
-        this.ctx.strokeStyle = '#E0003C'; // Vibrant Red frame
-        this.ctx.lineWidth = 4.5;
+        // Draw chassis main frame link (glowing neon red)
+        this.ctx.save();
+        this.ctx.strokeStyle = '#E0003C';
+        this.ctx.shadowBlur = 10;
+        this.ctx.shadowColor = '#E0003C';
+        this.ctx.lineWidth = 5.0;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
         this.ctx.beginPath();
         this.ctx.moveTo(pr.x, pr.y);
         this.ctx.lineTo(pc.x, pc.y);
         this.ctx.lineTo(pf.x, pf.y);
         this.ctx.stroke();
+        this.ctx.restore();
 
         // Draw engine box block
-        this.ctx.fillStyle = '#fff';
-        this.ctx.strokeStyle = '#111';
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.strokeStyle = '#111114';
         this.ctx.lineWidth = 1.5;
         this.ctx.beginPath();
-        this.ctx.arc(pc.x, pc.y + 3, 7, 0, Math.PI * 2);
+        this.ctx.arc(pc.x, pc.y + 3, 6, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.stroke();
 
-        // Draw wheels
+        // Draw wheels (glowing neon white)
         const drawWheel = (w) => {
-            // Tyre
-            this.ctx.strokeStyle = '#fff';
-            this.ctx.fillStyle = '#111';
-            this.ctx.lineWidth = 2.5;
+            this.ctx.save();
+            this.ctx.strokeStyle = '#ffffff';
+            this.ctx.fillStyle = '#111114';
+            this.ctx.shadowBlur = 8;
+            this.ctx.shadowColor = '#ffffff';
+            this.ctx.lineWidth = 2.8;
             this.ctx.beginPath();
             this.ctx.arc(w.x, w.y, this.wheelRadius, 0, Math.PI * 2);
             this.ctx.fill();
             this.ctx.stroke();
+            this.ctx.restore();
 
-            // Rim / Hub
-            this.ctx.strokeStyle = '#fff';
+            // Inner hub (no shadow)
+            this.ctx.strokeStyle = '#ffffff';
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
-            this.ctx.arc(w.x, w.y, 4, 0, Math.PI * 2);
+            this.ctx.arc(w.x, w.y, 3, 0, Math.PI * 2);
             this.ctx.stroke();
 
-            // Spokes
+            // Spokes (no shadow)
             this.ctx.beginPath();
             for (let i = 0; i < 4; i++) {
                 const angle = w.angle + (i * Math.PI / 2);
@@ -1291,74 +1451,70 @@ class StockRider {
         drawWheel(pr);
         drawWheel(pf);
 
-        // Draw Rider Figure
-        // Calculate angle of bike
+        // --- Simplified Rider Posture with Neon Glow ---
         const bDx = pf.x - pr.x;
         const bDy = pf.y - pr.y;
         const bikeAngle = Math.atan2(bDy, bDx);
 
-        // Seat position sits slightly behind center
-        const seatX = pc.x - Math.cos(bikeAngle) * 6;
-        const seatY = pc.y - Math.sin(bikeAngle) * 6;
+        // Seat position
+        const seatX = pc.x - Math.cos(bikeAngle) * 5;
+        const seatY = pc.y - Math.sin(bikeAngle) * 5;
 
-        // Head position
-        const headX = seatX - Math.sin(bikeAngle) * 18 - Math.cos(bikeAngle) * 2;
-        const headY = seatY + Math.cos(bikeAngle) * 18 - Math.sin(bikeAngle) * 2;
+        // Head/guard position from physical Matter.js body
+        const headX = this.bike.guardBody.position.x;
+        const headY = this.bike.guardBody.position.y;
 
-        // Draw Spine/Torso
-        this.ctx.strokeStyle = '#fff';
+        // Draw Rider Body Parts with glowing white lines
+        this.ctx.save();
+        this.ctx.strokeStyle = '#ffffff';
+        this.ctx.shadowBlur = 6;
+        this.ctx.shadowColor = '#ffffff';
         this.ctx.lineWidth = 3;
         this.ctx.lineCap = 'round';
+
+        // Torso / Spine
         this.ctx.beginPath();
         this.ctx.moveTo(seatX, seatY);
         this.ctx.lineTo(headX, headY);
         this.ctx.stroke();
 
-        // Draw Head (Helmet)
-        this.ctx.fillStyle = '#E0003C'; // Red helmet
-        this.ctx.strokeStyle = '#fff';
-        this.ctx.lineWidth = 1.5;
-        this.ctx.beginPath();
-        this.ctx.arc(headX, headY - 4, 5, 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.stroke();
-        
-        // Helmet Visor
-        this.ctx.fillStyle = '#111';
-        this.ctx.beginPath();
-        this.ctx.arc(headX + Math.cos(bikeAngle + 0.3) * 3, headY - 4 + Math.sin(bikeAngle + 0.3) * 3, 2, 0, Math.PI * 2);
-        this.ctx.fill();
+        // Handlebars grip
+        const hbx = pc.x + Math.cos(bikeAngle) * 10 - Math.sin(bikeAngle) * 8;
+        const hby = pc.y + Math.sin(bikeAngle) * 10 - Math.cos(bikeAngle) * 8;
 
-        // Handlebars position
-        const hbx = pc.x + Math.cos(bikeAngle) * 12 - Math.sin(bikeAngle) * 10;
-        const hby = pc.y + Math.sin(bikeAngle) * 12 - Math.cos(bikeAngle) * 10;
-
-        // Draw Handlebars fork
-        this.ctx.strokeStyle = '#fff';
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         this.ctx.moveTo(pf.x, pf.y);
         this.ctx.lineTo(hbx, hby);
-        // Handle grip
-        this.ctx.moveTo(hbx - Math.sin(bikeAngle) * 4, hby + Math.cos(bikeAngle) * 4);
-        this.ctx.lineTo(hbx + Math.sin(bikeAngle) * 4, hby - Math.cos(bikeAngle) * 4);
         this.ctx.stroke();
 
-        // Arms from head (shoulders) to handlebars
+        // Arm line directly from shoulder to handlebars
         const shoulderX = headX + (seatX - headX) * 0.25;
         const shoulderY = headY + (seatY - headY) * 0.25;
-        this.ctx.strokeStyle = '#fff';
-        this.ctx.lineWidth = 2.5;
         this.ctx.beginPath();
         this.ctx.moveTo(shoulderX, shoulderY);
         this.ctx.lineTo(hbx, hby);
         this.ctx.stroke();
 
-        // Legs from seat (hips) to engine/foot-pegs
+        // Leg line directly from hips to foot-peg
         this.ctx.beginPath();
         this.ctx.moveTo(seatX, seatY);
-        this.ctx.lineTo(pc.x, pc.y + 8);
+        this.ctx.lineTo(pc.x, pc.y + 6);
         this.ctx.stroke();
+        this.ctx.restore();
+
+        // Helmet/Head (glowing red)
+        this.ctx.save();
+        this.ctx.fillStyle = '#E0003C'; // Red helmet
+        this.ctx.strokeStyle = '#ffffff';
+        this.ctx.shadowBlur = 8;
+        this.ctx.shadowColor = '#E0003C';
+        this.ctx.lineWidth = 1.5;
+        this.ctx.beginPath();
+        this.ctx.arc(headX, headY, 5, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.restore();
 
         this.ctx.restore();
     }

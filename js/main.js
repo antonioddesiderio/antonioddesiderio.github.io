@@ -425,9 +425,12 @@ function loadStudents(filter = 'all') {
     container.innerHTML = '';
 
     const students = DATA.students || [];
-    const filtered = filter === 'all'
-        ? students
+    let filtered = filter === 'all'
+        ? [...students]
         : students.filter(s => s.tags.includes(filter));
+        
+    // Sort students by year descending
+    filtered.sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
     filtered.forEach((student, index) => {
         const item = document.createElement('div');
