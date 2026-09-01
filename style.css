@@ -46,18 +46,11 @@
 .profile-img {
     width: 100%;
     aspect-ratio: 1;
+    display: block;
     border-radius: 50%;
     object-fit: cover;
-    object-position: center center;
+    object-position: center 18%;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, filter 0.4s ease;
-    filter: grayscale(30%);
-}
-
-.profile-img:hover {
-    transform: scale(1.02);
-    filter: grayscale(0%);
-    box-shadow: 0 20px 40px rgba(224, 0, 60, 0.15);
 }
 
 /* ... existing code ... */
@@ -176,6 +169,10 @@
     pointer-events: none;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
@@ -225,7 +222,7 @@ a:hover {
 /* --- Bento Grid & Micro-Interactions --- */
 .bento-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     grid-auto-rows: minmax(200px, auto);
     gap: var(--space-lg);
     margin-top: var(--space-xl);
@@ -484,10 +481,12 @@ a:hover {
 
 /* Profile Section */
 .profile-layout {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: var(--space-4xl);
-    align-items: start;
+    display: block;
+}
+
+.profile-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 #welcome-text p {
@@ -512,8 +511,10 @@ a:hover {
 }
 
 .profile-image-container {
-    position: sticky;
-    top: calc(var(--nav-height) + var(--space-2xl));
+    float: right;
+    width: min(350px, 42vw);
+    shape-outside: circle(50%);
+    margin: 0 0 var(--space-xl) var(--space-2xl);
 }
 
 /* Lists */
@@ -661,26 +662,16 @@ footer {
 /* Responsive */
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column;
-        height: auto;
-        padding: 1rem;
-    }
-
-    .nav-links {
-        margin-top: 1rem;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .profile-layout {
-        grid-template-columns: 1fr;
+        padding: 0 var(--space-lg);
     }
 
     .profile-image-container {
-        order: -1;
-        max-width: 200px;
-        margin: 0 auto;
+        float: none;
+        display: block;
+        width: 140px;
+        max-width: 40%;
+        margin: 0 auto var(--space-lg);
+        shape-outside: none;
     }
 
     #cube-container-main {
@@ -1046,6 +1037,7 @@ footer {
 
 .socials-list {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-sm);
     margin-top: var(--space-md);
 }
@@ -1110,33 +1102,53 @@ footer {
     transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
+    .navbar {
+        padding: 0 var(--space-lg);
+        z-index: 200;
+        overflow: visible;
+    }
+
     .hamburger {
         display: flex;
     }
 
     .nav-links {
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: var(--nav-height);
         left: 0;
+        right: 0;
+        bottom: 0;
         width: 100%;
-        background: rgba(255, 255, 255, 0.98);
+        margin: 0;
+        background: #fff;
         flex-direction: column;
-        align-items: center;
-        padding: 2rem 0;
-        transform: translateY(-100%);
-        opacity: 0;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0;
+        padding: var(--space-md) 0 calc(var(--space-2xl) + env(safe-area-inset-bottom));
+        overflow-y: auto;
+        transform: none;
+        opacity: 1;
+        visibility: hidden;
         pointer-events: none;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        z-index: 999;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 200;
+        box-shadow: none;
     }
 
     .nav-links.active {
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: all;
+        visibility: visible;
+        pointer-events: auto;
     }
+
+    .nav-links a {
+        display: block;
+        padding: var(--space-md) var(--space-xl);
+    }
+}
+
+body.nav-open {
+    overflow: hidden;
 }
 
 /* Contacts Section */
@@ -1164,9 +1176,13 @@ footer {
         display: none !important;
     }
 
-    /* Hide Profile Avatar */
     .profile-image-container {
-        display: none !important;
+        float: none;
+        display: block;
+        width: 140px;
+        max-width: 40%;
+        margin: 0 auto var(--space-lg);
+        shape-outside: none;
     }
 
     /* Remove Manga Background */
@@ -1183,5 +1199,57 @@ footer {
         font-size: var(--step-1);
         white-space: normal;
         padding: 0 var(--space-lg);
+    }
+}
+
+/* Publications: keep assistant, don't cover titles/DOI */
+#publications .container {
+    padding-right: calc(var(--space-2xl) + 180px + var(--space-md));
+}
+
+#publications .bento-grid {
+    padding-bottom: 7rem;
+}
+
+@media (max-width: 800px) {
+    #publications .assistant-img {
+        width: 96px;
+    }
+
+    #publications .container {
+        padding-right: calc(var(--space-lg) + 108px);
+    }
+
+    #publications .bento-grid {
+        padding-bottom: 6rem;
+    }
+}
+
+/* Intro skip button */
+.skip-intro {
+    position: absolute;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--bg-color);
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+    padding: var(--space-sm) var(--space-xl);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.skip-intro:hover,
+.skip-intro:focus-visible {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .assistant-img {
+        width: 96px;
     }
 }

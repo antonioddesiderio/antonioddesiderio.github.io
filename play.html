@@ -16,7 +16,7 @@
         body {
             margin: 0;
             padding: 0;
-            width: 100vw;
+            width: 100%;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -63,7 +63,7 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
             gap: 2.5rem;
             width: 100%;
             margin-top: 1rem;
@@ -276,7 +276,14 @@
                 <span class="play-btn">Play Invaders</span>
             </a>
 
-
+            <a href="play_stock_rider.html" class="game-card">
+                <div class="game-card-img-wrapper">
+                    <img src="assets/stock_rider_preview.png" alt="Stock Rider" class="game-card-img" loading="lazy">
+                </div>
+                <h2 class="game-card-title">Stock Rider</h2>
+                <p class="game-card-desc">Ride market volatility as terrain. Pick a ticker, or upload a series, and try not to margin-call.</p>
+                <span class="play-btn">Play Rider</span>
+            </a>
         </div>
 
         <div class="quotes-block">

@@ -348,12 +348,21 @@ function typeWriter(element, text, speed = 100) {
     });
 }
 
+let introFinished = false;
+
 function startIntro() {
     const duration = 5000; // 5 seconds
     const progressBar = document.getElementById('progress-bar');
     const introOverlay = document.getElementById('intro-overlay');
     const mainContent = document.getElementById('main-content');
     const greeting = document.getElementById('intro-greeting');
+    const skipBtn = document.getElementById('skip-intro');
+
+    const skipNow = () => finishIntro(introOverlay, mainContent);
+    if (skipBtn) skipBtn.addEventListener('click', skipNow);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') skipNow();
+    });
 
     // Typewriter effect (Start Immediately)
     (async () => {
@@ -388,6 +397,9 @@ function startIntro() {
 }
 
 function finishIntro(overlay, mainContent) {
+    if (introFinished) return;
+    introFinished = true;
+
     // 1. Prepare Main Content: Blurred and Zoomed In
     mainContent.classList.add('cinematic-mount');
     mainContent.classList.remove('hidden');
@@ -524,10 +536,9 @@ function loadCollaborationsMap() {
     const map = L.map('collaborations-map').setView([50, 10], 4);
     window.collabMap = map; // Expose for invalidateSize
 
-    // CartoDB Positron (Light)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
+    // OSM standard tiles (Carto light_all now requires an API key)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19
     }).addTo(map);
 
@@ -652,17 +663,18 @@ function setupMobileNav() {
     const navLinks = document.querySelector('.nav-links');
 
     if (hamburger) {
+        const setOpen = (open) => {
+            navLinks.classList.toggle('active', open);
+            hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+            document.body.classList.toggle('nav-open', open);
+        };
+
         hamburger.addEventListener('click', () => {
-            const isActive = navLinks.classList.toggle('active');
-            hamburger.setAttribute('aria-expanded', isActive);
+            setOpen(!navLinks.classList.contains('active'));
         });
 
-        // Close on link click
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.setAttribute('aria-expanded', 'false');
-            });
+            link.addEventListener('click', () => setOpen(false));
         });
     }
 }

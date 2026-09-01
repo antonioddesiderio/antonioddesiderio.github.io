@@ -119,56 +119,125 @@ class GameAudio {
 }
 
 // ----------------------------------------------------
-// CURATED HISTORICAL STOCK PRESETS
+// CURATED HISTORICAL STOCK PRESETS (real closes)
 // ----------------------------------------------------
 const STOCK_PRESETS = {
     gme: {
         ticker: "GME",
         name: "GameStop Meme Squeeze",
-        trend: "+2,400%",
+        trend: "+1,657%",
         direction: "up",
+        // unadjusted daily closes, Nov 2020-Mar 2021 squeeze; first=10.8 last=189.8 peak=347.5
         prices: [
-            15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 17, 19, 21, 20, 25, 30, 35, 
-            40, 38, 48, 65, 80, 110, 150, 250, 483, 420, 350, 280, 180, 110, 90, 120, 190, 270, 220, 160, 
-            130, 100, 90, 85, 95, 120, 150, 135, 110, 90, 80, 110, 140, 190, 170, 130, 95, 80, 70, 85, 
-            100, 130, 170, 210, 180, 140, 110, 90, 80, 75, 90, 110, 130, 160, 145, 120, 100, 85, 75, 70, 
-            75, 80, 90, 110, 120, 105, 90, 80, 75, 80, 90, 100, 110, 100, 90, 85, 80, 85, 90, 100
+            10.8, 11.6, 10.9, 11.4, 11.9, 11.5, 11.1, 11.8, 11.1, 11.0,
+            12.1, 11.6, 11.6, 12.5, 12.7, 13.9, 13.7, 14.8, 16.1, 16.6,
+            15.8, 16.6, 16.1, 16.9, 16.4, 16.9, 13.7, 14.1, 13.3, 12.7,
+            13.8, 13.8, 14.8, 15.6, 15.5, 19.5, 20.6, 20.1, 21.0, 19.4,
+            19.3, 18.8, 17.2, 17.4, 18.4, 18.1, 17.7, 19.9, 20.0, 31.4,
+            39.9, 35.5, 39.4, 39.1, 43.0, 65.0, 76.8, 148.0, 347.5, 193.6,
+            325.0, 225.0, 90.0, 92.4, 53.5, 63.8, 60.0, 50.3, 51.2, 51.1,
+            52.4, 49.5, 45.9, 40.7, 40.6, 46.0, 45.0, 91.7, 108.7, 101.7,
+            120.4, 118.2, 124.2, 132.4, 137.7, 194.5, 246.9, 265.0, 260.0, 264.5,
+            220.1, 208.2, 209.8, 201.8, 200.3, 194.5, 181.8, 120.3, 183.8, 181.0,
+            181.3, 194.5, 189.8
         ]
     },
     nvda: {
         ticker: "NVDA",
         name: "Nvidia AI Surge",
-        trend: "+850%",
+        trend: "+520%",
         direction: "up",
+        // every daily close Jan 2023-May 2024, pre 10:1 split; n=336 first=143.1 last=887.8 peak=950.0
         prices: [
-            12, 12, 12, 12, 12, 12, 12, 12, 13, 14, 16, 15, 18, 20, 19, 22, 25, 23, 28, 32, 
-            30, 35, 41, 38, 45, 52, 48, 56, 64, 60, 68, 76, 72, 82, 92, 88, 100, 112, 106, 120, 
-            135, 128, 145, 162, 154, 175, 195, 186, 210, 230, 218, 245, 272, 260, 290, 320, 305, 340, 
-            380, 360, 410, 450, 430, 490, 540, 515, 580, 640, 610, 680, 750, 715, 800, 870, 835, 920, 
-            1000, 960, 1060, 1180, 1120, 1250, 1380, 1320, 1450, 1600, 1540, 1700, 1880, 1800, 1950, 2100
+            143.1, 147.5, 142.6, 148.6, 156.3, 159.1, 160.0, 165.1, 169.0, 177.0,
+            173.8, 167.6, 178.4, 191.9, 192.6, 193.2, 198.0, 203.6, 191.6, 195.4,
+            209.4, 217.1, 211.0, 210.9, 221.7, 222.1, 223.4, 212.6, 217.9, 229.7,
+            227.6, 220.0, 213.9, 206.6, 207.5, 236.6, 232.9, 235.0, 232.2, 227.0,
+            233.1, 238.9, 235.5, 232.9, 241.8, 234.4, 229.6, 229.7, 240.6, 242.3,
+            255.4, 257.2, 259.0, 262.0, 264.7, 271.9, 267.8, 265.3, 264.1, 269.8,
+            273.8, 277.8, 279.6, 274.5, 268.8, 270.4, 275.8, 271.7, 265.0, 264.6,
+            267.6, 270.0, 276.7, 279.3, 271.0, 271.2, 270.4, 262.4, 269.6, 272.3,
+            277.5, 289.1, 282.1, 278.0, 275.6, 286.8, 291.5, 285.7, 288.9, 285.8,
+            283.4, 289.5, 292.1, 301.8, 316.8, 312.6, 311.8, 306.9, 305.4, 379.8,
+            389.5, 401.1, 378.3, 397.7, 393.3, 391.7, 386.5, 374.8, 385.1, 387.7,
+            394.8, 410.2, 430.0, 426.5, 426.9, 438.1, 430.5, 430.2, 422.1, 406.3,
+            418.8, 411.2, 408.2, 423.0, 424.1, 423.2, 421.0, 425.0, 421.8, 424.0,
+            439.0, 459.8, 454.7, 464.6, 474.9, 470.8, 455.2, 443.1, 446.1, 456.8,
+            454.5, 459.0, 467.5, 467.3, 465.1, 442.7, 445.1, 446.8, 454.2, 446.6,
+            425.5, 423.9, 408.5, 437.5, 439.4, 434.9, 433.4, 433.0, 469.7, 456.7,
+            471.2, 471.6, 460.2, 468.4, 487.8, 492.6, 493.5, 485.1, 485.5, 470.6,
+            462.4, 455.7, 451.8, 448.7, 454.9, 455.8, 439.0, 439.7, 435.2, 422.4,
+            410.2, 416.1, 422.2, 419.1, 424.7, 430.9, 435.0, 447.8, 435.2, 440.4,
+            446.9, 457.6, 452.7, 458.0, 468.1, 469.5, 454.6, 461.0, 439.4, 422.0,
+            421.0, 413.9, 429.8, 436.6, 417.8, 403.3, 405.0, 411.6, 407.8, 423.2,
+            435.1, 450.0, 457.5, 459.5, 465.7, 469.5, 483.4, 486.2, 496.6, 488.9,
+            494.8, 493.0, 504.1, 499.4, 487.2, 477.8, 482.4, 478.2, 481.4, 467.7,
+            467.6, 455.1, 465.7, 455.0, 466.0, 475.1, 466.3, 476.6, 480.9, 483.5,
+            488.9, 500.8, 496.0, 481.1, 489.9, 488.3, 492.8, 494.2, 495.2, 495.2,
+            481.7, 475.7, 480.0, 491.0, 522.5, 531.4, 543.5, 548.2, 547.1, 563.8,
+            560.5, 571.1, 594.9, 596.5, 598.7, 613.6, 616.2, 610.3, 624.7, 627.7,
+            615.3, 630.3, 661.6, 693.3, 682.2, 701.0, 696.4, 721.3, 722.5, 721.3,
+            739.0, 726.6, 726.1, 694.5, 674.7, 785.4, 788.2, 790.9, 787.0, 776.6,
+            791.1, 822.8, 852.4, 859.6, 887.0, 926.7, 875.3, 857.7, 919.1, 908.9,
+            879.4, 878.4, 884.5, 894.0, 903.7, 914.3, 942.9, 950.0, 925.6, 902.5,
+            903.6, 903.6, 894.5, 889.6, 859.0, 880.1, 871.3, 853.5, 870.4, 906.2,
+            881.9, 860.0, 874.2, 840.3, 846.7, 762.0, 795.2, 824.2, 796.8, 826.3,
+            877.3, 877.6, 864.0, 830.4, 858.2, 887.8
         ]
     },
     tsla: {
         ticker: "TSLA",
         name: "Tesla Cyber Slope",
-        trend: "+340%",
+        trend: "+262%",
         direction: "up",
+        // every daily close May 2020-May 2021; n=251 first=162.7 last=589.7 peak=883.1
         prices: [
-            80, 80, 80, 80, 80, 80, 80, 80, 85, 95, 115, 140, 130, 110, 90, 70, 65, 80, 105, 135, 
-            160, 185, 170, 140, 110, 85, 95, 120, 155, 200, 250, 290, 260, 210, 160, 120, 95, 115, 145, 190, 
-            245, 300, 350, 320, 270, 210, 160, 125, 150, 190, 240, 290, 330, 295, 245, 190, 140, 165, 205, 255, 
-            305, 340, 305, 250, 195, 150, 180, 225, 275, 315, 335, 295, 240, 180, 145, 175, 220, 260, 280, 240
+            162.7, 161.6, 163.1, 165.5, 163.4, 163.8, 164.0, 161.2, 167.0, 179.6,
+            176.3, 176.6, 172.9, 177.1, 190.0, 188.1, 205.0, 194.6, 187.1, 198.2,
+            196.4, 198.4, 200.8, 200.2, 198.9, 200.4, 192.2, 197.2, 191.9, 201.9,
+            216.0, 223.9, 241.7, 274.3, 278.0, 273.2, 278.9, 308.9, 299.4, 303.4,
+            309.2, 300.1, 300.2, 328.6, 313.7, 318.5, 302.6, 283.4, 307.9, 295.3,
+            299.8, 297.5, 286.2, 297.0, 297.4, 297.0, 297.9, 290.5, 283.7, 274.9,
+            311.0, 324.2, 330.1, 367.1, 377.4, 375.7, 400.4, 410.0, 402.8, 404.7,
+            430.6, 447.8, 442.7, 498.3, 475.0, 447.4, 407.0, 418.3, 330.2, 366.3,
+            371.3, 372.7, 419.6, 449.8, 441.8, 423.4, 442.1, 449.4, 424.2, 380.4,
+            387.8, 407.3, 421.2, 419.1, 429.0, 448.2, 415.1, 425.7, 414.0, 425.3,
+            425.9, 434.0, 442.3, 446.6, 461.3, 448.9, 439.7, 430.8, 421.9, 422.6,
+            425.8, 420.6, 420.3, 424.7, 406.0, 410.8, 388.0, 400.5, 423.9, 421.0,
+            438.1, 430.0, 421.3, 410.4, 417.1, 411.8, 408.5, 408.1, 441.6, 486.6,
+            499.3, 489.6, 521.8, 555.4, 574.0, 585.8, 567.6, 584.8, 568.8, 593.4,
+            599.0, 641.8, 649.9, 604.5, 627.1, 610.0, 639.8, 633.2, 622.8, 655.9,
+            695.0, 649.9, 640.3, 646.0, 661.8, 663.7, 666.0, 694.8, 705.7, 729.8,
+            735.1, 756.0, 816.0, 880.0, 811.2, 849.4, 854.4, 845.0, 826.2, 844.5,
+            850.5, 845.0, 846.6, 880.8, 883.1, 864.2, 835.4, 793.5, 839.8, 872.8,
+            854.7, 850.0, 852.2, 863.4, 849.5, 804.8, 811.7, 816.1, 796.2, 798.2,
+            787.4, 781.3, 714.5, 698.8, 742.0, 682.2, 675.5, 718.4, 686.4, 653.2,
+            621.4, 598.0, 563.0, 673.6, 668.1, 699.6, 693.7, 707.9, 676.9, 701.8,
+            653.2, 654.9, 670.0, 662.2, 630.3, 640.4, 618.7, 611.3, 635.6, 667.9,
+            661.8, 691.0, 691.6, 671.0, 683.8, 677.0, 702.0, 762.3, 732.2, 738.8,
+            739.8, 714.6, 719.0, 744.1, 719.7, 729.4, 738.2, 704.7, 694.4, 677.0,
+            709.4, 684.9, 673.6, 670.9, 663.5, 672.4, 629.0, 617.2, 589.9, 571.7,
+            589.7
         ]
     },
     aapl: {
         ticker: "AAPL",
         name: "Apple Safe Ridge",
-        trend: "+48%",
+        trend: "+47%",
         direction: "up",
+        // weekly closes Sep 2024-Sep 2026; first=220.8 last=324.8 peak=333.7
         prices: [
-            100, 100, 100, 100, 100, 100, 100, 100, 102, 104, 103, 106, 108, 107, 110, 112, 111, 114, 116, 115, 
-            118, 120, 119, 122, 124, 123, 126, 128, 127, 130, 132, 131, 134, 136, 135, 138, 140, 139, 142, 144, 
-            143, 146, 148, 147, 150, 152, 151, 154, 156, 155, 158, 160, 159, 162, 164, 163, 166, 168, 167, 170
+            220.8, 222.5, 228.2, 227.8, 226.8, 227.6, 235.0, 231.4, 222.9, 227.0,
+            225.0, 229.9, 237.3, 242.8, 248.1, 254.5, 255.6, 243.4, 236.9, 230.0,
+            222.8, 236.0, 227.6, 244.6, 245.6, 241.8, 213.5, 218.3, 217.9, 188.4,
+            198.1, 197.0, 209.3, 205.4, 198.5, 211.3, 195.3, 200.9, 203.9, 196.4,
+            201.0, 201.1, 213.6, 211.2, 211.2, 213.9, 202.4, 229.4, 231.6, 227.8,
+            232.1, 239.7, 234.1, 245.5, 255.5, 258.0, 245.3, 252.3, 262.8, 270.4,
+            268.5, 272.4, 271.5, 278.9, 278.8, 278.3, 273.7, 273.4, 271.0, 259.4,
+            255.5, 248.0, 259.5, 278.1, 255.8, 264.6, 264.2, 257.5, 248.0, 248.8,
+            255.9, 260.5, 270.2, 271.1, 280.1, 293.3, 300.2, 308.8, 312.1, 307.3,
+            291.1, 298.0, 283.8, 308.6, 315.3, 333.7, 333.0, 308.9, 313.3, 305.9,
+            309.4, 319.7, 316.9, 324.8
         ]
     }
 };
@@ -253,7 +322,7 @@ class StockRider {
             frictionAir: 0.001,
             restitution: 0.02,
             label: 'wheel',
-            collisionFilter: { group: -1 }
+            collisionFilter: { group: -1, category: 0x0002, mask: 0x0001 }
         });
 
         // Front wheel
@@ -263,17 +332,17 @@ class StockRider {
             frictionAir: 0.001,
             restitution: 0.02,
             label: 'wheel',
-            collisionFilter: { group: -1 }
+            collisionFilter: { group: -1, category: 0x0002, mask: 0x0001 }
         });
 
-        // Guard / rider mass – bobbing body above frame (stonkrider guard body)
-        const guardY = frameY + this.FRAME_HEIGHT / 2 + 10;
+        // Helmet sits ABOVE the frame (was below, so it clipped the track and died instantly)
+        const guardY = frameY - this.FRAME_HEIGHT / 2 - 14;
         this.bike.guardBody = Matter.Bodies.circle(tx, guardY, 10, {
             mass: 0.1,
             friction: 0.3,
             restitution: 0,
             label: 'guard',
-            collisionFilter: { group: -1 }
+            collisionFilter: { group: -1, mask: 0 }
         });
 
         // ---- Constraints – stonkrider exact setup ----
@@ -293,7 +362,7 @@ class StockRider {
         const axleLink  = Matter.Constraint.create({ bodyA: this.bike.rearBody, bodyB: this.bike.frontBody, length: this.WHEEL_SPACING, ...sd });
 
         // Guard neck – length:0, stiffness:1 = nearly rigid
-        const guardNeck = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x: 0, y: 16 }, bodyB: this.bike.guardBody, length: 0, stiffness: 1, damping: 0.1 });
+        const guardNeck = Matter.Constraint.create({ bodyA: this.bike.frameBody, pointA: { x: 0, y: -16 }, bodyB: this.bike.guardBody, length: 0, stiffness: 1, damping: 0.1 });
 
         this.bikeConstraints = [rearUpper, rearLower, frontUpper, frontLower, axleLink, guardNeck];
 
@@ -314,7 +383,7 @@ class StockRider {
 
         // Track constraints
         this.runwayWidth = 400;
-        this.finishWidth = 450;
+        this.finishWidth = 720;
         this.pxPerPoint = 28;
         this.baseHeight = 520;       // Y coordinate for lowest price
         this.heightRange = 360;      // Amplitude of vertical scaling
@@ -329,6 +398,8 @@ class StockRider {
         this.isStarted = false;
         this.score = 0;
         this.crashes = 0;
+        this.lastSafeX = 140;
+        this.dangerFrames = 0;
         this.startTime = 0;
         this.finalTime = 0;
 
@@ -676,25 +747,37 @@ class StockRider {
                 this.trackPoints.push({ x: interpX, y: interpY, price: interpPrice });
             }
 
-            // Scatter coins (BUY nodes) to collect along the path
-            // Placed at every 3rd stock point, 50-70px above the track
+            // BUY nodes sit just above the rider so rolling over them collects them
             if (i > 2 && i < this.prices.length - 2 && i % 3 === 0) {
-                // Ensure coin height is safe
-                const cY = scaleY(priceCurrent) - 65 - Math.sin(i) * 20;
+                const cX = startX + this.pxPerPoint / 2;
                 this.coins.push({
-                    x: startX + this.pxPerPoint / 2,
-                    y: cY,
+                    x: cX,
+                    y: scaleY(priceCurrent) - 46,
                     active: true,
-                    val: Math.round(priceCurrent / 2) // score corresponds to price
+                    val: Math.round(priceCurrent / 2)
                 });
             }
         }
 
-        // Build flat finish runway
-        const endX = this.runwayWidth + (this.prices.length - 1) * this.pxPerPoint;
-        const endY = scaleY(this.prices[this.prices.length - 1]);
-        for (let offset = 0; offset <= this.finishWidth; offset += 15) {
-            this.trackPoints.push({ x: endX + offset, y: endY, price: this.prices[this.prices.length - 1] });
+        // Cap slope on the chart only (max ~38deg), then add a flat finish after the last point
+        const maxDyDx = 0.78;
+        for (let i = 1; i < this.trackPoints.length; i++) {
+            const dx = this.trackPoints[i].x - this.trackPoints[i - 1].x;
+            if (dx <= 0) continue;
+            const maxDy = maxDyDx * dx;
+            const dy = this.trackPoints[i].y - this.trackPoints[i - 1].y;
+            if (Math.abs(dy) > maxDy) {
+                this.trackPoints[i].y = this.trackPoints[i - 1].y + Math.sign(dy) * maxDy;
+            }
+        }
+
+        const lastPt = this.trackPoints[this.trackPoints.length - 1];
+        const finishPrice = this.prices[this.prices.length - 1];
+        for (let offset = 15; offset <= this.finishWidth; offset += 15) {
+            this.trackPoints.push({ x: lastPt.x + offset, y: lastPt.y, price: finishPrice });
+        }
+        for (const coin of this.coins) {
+            coin.y = this.getTerrainHeight(coin.x) - 46;
         }
 
         // Update HUD labels
@@ -723,7 +806,7 @@ class StockRider {
             
             // Stonkrider exact terrain creation
             // Offset downward by half the thickness (15) so the TOP edge aligns with the track line
-            const thickness = 30;
+            const thickness = 42;
             const offsetX = -Math.sin(angle) * (thickness / 2);
             const offsetY = Math.cos(angle) * (thickness / 2);
 
@@ -796,13 +879,14 @@ class StockRider {
     // ----------------------------------------------------
     resetGame(isFullReset = true) {
         // Position rider at start of runway
-        const startX = 140;
+        const startX = isFullReset ? 140 : Math.max(80, this.lastSafeX || 140);
         const startY = this.getTerrainHeight(startX);
 
         // Compute start positions for all bodies
-        const frameStartY = startY - this.WHEEL_RADIUS - this.FRAME_ABOVE;
-        const wheelStartY = startY - this.WHEEL_RADIUS;
-        const guardStartY = frameStartY + this.FRAME_HEIGHT / 2 + 10;
+        const lift = 10;
+        const frameStartY = startY - this.WHEEL_RADIUS - this.FRAME_ABOVE - lift;
+        const wheelStartY = startY - this.WHEEL_RADIUS - lift;
+        const guardStartY = frameStartY - this.FRAME_HEIGHT / 2 - 14;
 
         // Clear accumulator and ground state so no phantom forces carry over between resets
         this.accumulator   = 0;
@@ -859,13 +943,15 @@ class StockRider {
         this.camX = 0;
         this.camY = 0;
         
-        this.spawnTimer = 0.8; // Invulnerability frames to prevent spawn crashes
+        this.spawnTimer = 1.6; // Invulnerability after spawn / checkpoint
+        this.dangerFrames = 0;
         this.particles = [];
 
         if (isFullReset) {
             this.coins.forEach(c => c.active = true);
             this.score = 0;
-            this.lives = 3;
+            this.lives = 5;
+            this.lastSafeX = 140;
             this.startTime = performance.now();
         }
 
@@ -881,7 +967,7 @@ class StockRider {
         
         const livesEl = document.getElementById('hud-lives');
         if (livesEl) {
-            livesEl.innerText = "📈 📈 📈";
+            livesEl.innerText = Array(Math.max(0, this.lives)).fill("📈").join(" ") || "—";
             livesEl.style.color = "#23BC3F";
         }
     }
@@ -987,6 +1073,8 @@ class StockRider {
             // --- Re-query ground state (stored for NEXT tick, exactly as stonkrider) ---
             this.rearOnGround  = this.isWheelOnGround(rear);
             this.frontOnGround = this.isWheelOnGround(front);
+            this.unclipBody(rear);
+            this.unclipBody(front);
 
             this.accumulator -= this.FIXED_STEP;
         }
@@ -1016,6 +1104,11 @@ class StockRider {
         this.bike.chassis.vy    = frame.velocity.y;
         this.bike.chassis.angle = frame.angle;
 
+        const upright = Math.abs(Math.atan2(Math.sin(frame.angle), Math.cos(frame.angle))) < 0.45;
+        if (this.rearOnGround && this.frontOnGround && upright && this.spawnTimer <= 0) {
+            this.lastSafeX = Math.max(80, frame.position.x - 40);
+        }
+
         // Left boundary guard
         if (rear.position.x < 15) {
             Matter.Body.setPosition(rear,  { x: 15, y: rear.position.y });
@@ -1028,6 +1121,17 @@ class StockRider {
     }
 
     // Return terrain slope angle (radians) at world-space X – stonkrider rt() inner loop
+    unclipBody(body) {
+        const groundY = this.getTerrainHeight(body.position.x);
+        const bottom = body.position.y + this.WHEEL_RADIUS;
+        if (bottom > groundY + 10) {
+            Matter.Body.setPosition(body, { x: body.position.x, y: groundY - this.WHEEL_RADIUS - 0.5 });
+            if (body.velocity.y > 0) {
+                Matter.Body.setVelocity(body, { x: body.velocity.x, y: 0 });
+            }
+        }
+    }
+
     getTrackAngleAt(x) {
         for (let i = 0; i < this.trackPoints.length - 1; i++) {
             if (this.trackPoints[i + 1].x >= x) {
@@ -1041,42 +1145,49 @@ class StockRider {
 
     checkGameStates() {
         if (this.isGameOver || this.isWin) return;
-        if (this.spawnTimer > 0) return; // Invulnerability active
+        if (this.spawnTimer > 0) {
+            this.dangerFrames = 0;
+            return;
+        }
 
         const chassis = this.bike.chassis;
-
-        // 1. Crash Condition: Rider's head/helmet hits the ground
+        const frame = this.bike.frameBody;
+        const uprightAngle = Math.abs(Math.atan2(Math.sin(frame.angle), Math.cos(frame.angle)));
         const headX = this.bike.guardBody.position.x;
         const headY = this.bike.guardBody.position.y;
-        const headGroundHeight = this.getTerrainHeight(headX);
-
-        if (headY >= headGroundHeight - 4) {
-            this.triggerGameOver();
-            return;
-        }
-
-        // Extra protection: If both wheels are off the ground, but chassis is lower than wheels (severe tilt/flip)
+        const headOnGround = headY >= this.getTerrainHeight(headX) - 2;
         const avgWheelsY = (this.bike.rear.y + this.bike.front.y) / 2;
-        if (chassis.y > avgWheelsY + 16) {
+        const inverted = chassis.y > avgWheelsY + 28;
+        const toppled = uprightAngle > 2.05 && (this.rearOnGround || this.frontOnGround || headOnGround || inverted);
+
+        this.dangerFrames = toppled ? this.dangerFrames + 1 : 0;
+        if (this.dangerFrames > 10) {
             this.triggerGameOver();
             return;
         }
 
-        // 2. Win Condition: Reached the end of the stock chart finish line
-        const endX = this.runwayWidth + (this.prices.length - 1) * this.pxPerPoint;
-        if (chassis.x >= endX + 100) {
+        const finishX = this.trackPoints[this.trackPoints.length - 1].x - this.finishWidth;
+        if (chassis.x >= finishX) {
             this.triggerWin();
             return;
         }
 
-        // 3. Coin collection checks
+        const buried = chassis.y > this.getTerrainHeight(chassis.x) + 48;
+        if (buried) {
+            this.triggerGameOver();
+            return;
+        }
+
         for (let coin of this.coins) {
-            if (coin.active) {
-                // Distance to chassis (rider) or wheels
-                const dChassis = Math.hypot(chassis.x - coin.x, chassis.y - coin.y);
-                if (dChassis < 26) {
-                    this.collectCoin(coin);
-                }
+            if (!coin.active) continue;
+            const hit = (px, py) => Math.hypot(px - coin.x, py - coin.y) < 44;
+            if (
+                hit(chassis.x, chassis.y) ||
+                hit(this.bike.rear.x, this.bike.rear.y) ||
+                hit(this.bike.front.x, this.bike.front.y) ||
+                hit(this.bike.guardBody.position.x, this.bike.guardBody.position.y)
+            ) {
+                this.collectCoin(coin);
             }
         }
     }
@@ -1247,16 +1358,11 @@ class StockRider {
             }
         }
 
-        // Draw Finish Line Text
-        const finishX = this.runwayWidth + (this.prices.length - 1) * this.pxPerPoint;
+        const finishX = this.trackPoints[this.trackPoints.length - 1].x - this.finishWidth;
         const finishY = this.getTerrainHeight(finishX);
-        
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-        this.ctx.fillRect(finishX, finishY - 400, 150, 400);
-
         this.ctx.fillStyle = '#E0003C';
         this.ctx.font = 'bold 12px "Space Mono", monospace';
-        this.ctx.fillText("HODL FINISH LINE", finishX + 15, finishY - 120);
+        this.ctx.fillText("HODL FINISH LINE", finishX + 18, finishY - 72);
 
         this.ctx.restore();
     }
@@ -1304,8 +1410,7 @@ class StockRider {
         // Clean shadow blur
         this.ctx.shadowBlur = 0;
 
-        // Draw checkered finish flag
-        const finishX = this.runwayWidth + (this.prices.length - 1) * this.pxPerPoint;
+        const finishX = this.trackPoints[this.trackPoints.length - 1].x - this.finishWidth;
         const finishY = this.getTerrainHeight(finishX);
         this.drawCheckeredFlag(finishX, finishY);
 
