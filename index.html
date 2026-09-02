@@ -4,7 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antonio Desiderio</title>
+    <title>Antonio Desiderio — Postdoctoral Researcher, ISI Foundation</title>
+    <meta name="description" content="Postdoctoral researcher at the ISI Foundation (Complex Connections Lab). Computational social science: online coordination, human mobility, and complex systems.">
+    <link rel="canonical" href="https://antonioddesiderio.github.io/">
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Antonio Desiderio — Postdoctoral Researcher, ISI Foundation">
+    <meta property="og:description" content="Postdoctoral researcher at the ISI Foundation. Computational social science, complex systems, online coordination, and urban mobility.">
+    <meta property="og:url" content="https://antonioddesiderio.github.io/">
+    <meta property="og:image" content="https://antonioddesiderio.github.io/assets/profile.jpg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Antonio Desiderio — Postdoctoral Researcher, ISI Foundation">
+    <meta name="twitter:description" content="Postdoctoral researcher at the ISI Foundation. Computational social science and complex systems.">
+    <meta name="twitter:image" content="https://antonioddesiderio.github.io/assets/profile.jpg">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="assets/profile.jpg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "name": "Antonio Desiderio",
+      "url": "https://antonioddesiderio.github.io/",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Antonio Desiderio",
+        "jobTitle": "Postdoctoral Researcher",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "ISI Foundation"
+        },
+        "url": "https://antonioddesiderio.github.io/",
+        "image": "https://antonioddesiderio.github.io/assets/profile.jpg",
+        "sameAs": [
+          "https://orcid.org/0000-0002-9971-450X",
+          "https://scholar.google.com/citations?user=v3MYshMAAAAJ",
+          "https://github.com/RiegelGestr",
+          "https://www.linkedin.com/in/antonio-desiderio-05121994/",
+          "https://x.com/ADTony_"
+        ]
+      }
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +70,7 @@
 
 <body>
     <a href="#main-content" class="skip-link">Skip to Content</a>
-    <canvas id="particles-canvas"></canvas>
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
     <!-- Intro Overlay -->
     <div id="intro-overlay">
@@ -49,11 +89,11 @@
     <main id="main-content" class="hidden">
         <nav class="navbar">
             <div class="nav-logo">Antonio Desiderio</div>
-            <div class="hamburger" role="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-links" tabindex="0">
+            <button type="button" class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-links">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
             <ul id="mobile-nav-links" class="nav-links">
                 <li><a href="#welcome" class="nav-link">About</a></li>
                 <li><a href="#jobs" class="nav-link">Experience</a></li>
@@ -74,8 +114,30 @@
                     </div>
                     <div class="profile-text">
                         <h2>Welcome</h2>
-                        <div id="welcome-text"></div>
-                        <div id="contacts-container"></div>
+                        <div id="welcome-text">
+                            <p>I am a Postdoctoral Researcher at the <strong>ISI Foundation</strong>, working within the <strong>Complex Connections Lab</strong> (Northeastern University London).</p>
+                            <p>With a background in physics, I study the digital and physical traces we leave behind to quantitatively understand human dynamics. My research draws on diverse datasets and methods from the Physics of Complex Systems, within the broader framework of Computational Social Science.</p>
+                            <p>In the digital sphere, I investigate how online coordination can trigger financial events and shape news consumption. In the physical world, I explore how urban design influences human mobility and food networks.</p>
+                            <p class="welcome-contact">If you have a question or find something interesting here, feel free to get in touch.<br><span class="welcome-contact-sub">I usually reply quickly.</span></p>
+                        </div>
+                        <div id="contacts-container">
+                            <h3 class="contacts-title">Contacts</h3>
+                            <div class="contacts-area">
+                                <div class="emails-list">
+                                    <p class="contact-email"><strong>Email:</strong> antonio [dot] desiderio [at] isi [dot] it</p>
+                                    <p class="contact-email"><strong>Email:</strong> antonio [dot] desiderio [at] cref [dot] it</p>
+                                    <p class="contact-email"><strong>Email:</strong> antde [at] dtu [dot] dk</p>
+                                </div>
+                                <div class="socials-list">
+                                    <a href="https://www.linkedin.com/in/antonio-desiderio-05121994/" class="social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                    <a href="https://x.com/ADTony_" class="social-link" target="_blank" rel="noopener noreferrer">X</a>
+                                    <a href="https://bsky.app/profile/adtony.bsky.social" class="social-link" target="_blank" rel="noopener noreferrer">Bluesky</a>
+                                    <a href="https://github.com/RiegelGestr" class="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                    <a href="https://scholar.google.com/citations?user=v3MYshMAAAAJ&amp;hl=it&amp;authuser=1" class="social-link" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+                                    <a href="https://orcid.org/0000-0002-9971-450X" class="social-link" target="_blank" rel="noopener noreferrer">ORCID</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="mt-1">
                             <a href="assets/cv.pdf" class="filter-btn active no-decoration border-dark" download>Download
                                 CV</a>
@@ -106,7 +168,16 @@
                 </div>
 
                 <div id="publications-grid" class="bento-grid">
-                    <!-- Dynamic bento items -->
+                    <article class="bento-item"><h3><a href="https://academic.oup.com/pnasnexus/article/4/3/pgaf056/8038017" target="_blank" rel="noopener noreferrer">Highly engaging events reveal semantic and temporal compression in online community discourse</a></h3><span class="meta">DOI: 10.1093/pnasnexus/pgaf056</span></article>
+                    <article class="bento-item"><h3><a href="https://www.nature.com/articles/s44260-025-00029-z" target="_blank" rel="noopener noreferrer">The dynamics of the Reddit collective action leading to the GameStop short squeeze</a></h3><span class="meta">DOI: 10.1038/s44260-025-00029-z</span></article>
+                    <article class="bento-item"><h3><a href="https://journals.aps.org/pre/abstract/10.1103/PhysRevE.110.024313" target="_blank" rel="noopener noreferrer">Spontaneous Opinion Swings in the Voter Model with Latency</a></h3><span class="meta">DOI: 10.1103/PhysRevE.110.024313</span></article>
+                    <article class="bento-item"><h3><a href="https://iopscience.iop.org/article/10.1088/2632-072X/ac9a29" target="_blank" rel="noopener noreferrer">Multiplex mobility network and metapopulation epidemic simulations of Italy based on open data</a></h3><span class="meta">DOI: 10.1088/2632-072X/ac9a29</span></article>
+                    <article class="bento-item"><h3><a href="https://www.nature.com/articles/s41598-022-17925-2" target="_blank" rel="noopener noreferrer">Self-induced consensus of Reddit users to characterise the GameStop short squeeze</a></h3><span class="meta">DOI: 10.1038/s41598-022-17925-2</span></article>
+                    <article class="bento-item"><h3><a href="https://journals.aps.org/prd/abstract/10.1103/PhysRevD.103.014502" target="_blank" rel="noopener noreferrer">First lattice calculation of radiative leptonic decay rates of pseudoscalar mesons</a></h3><span class="meta">DOI: 10.1103/PhysRevD.103.014502</span></article>
+                    <article class="bento-item"><h3><a href="https://arxiv.org/abs/2403.05876" target="_blank" rel="noopener noreferrer">The rise and fall of WallStreetBets: social roles and opinion leaders across the GameStop saga</a></h3><span class="meta">DOI: arXiv.2403.05876</span></article>
+                    <article class="bento-item"><h3><a href="https://arxiv.org/abs/2510.27467" target="_blank" rel="noopener noreferrer">Polarization and echo chambers in Reddit's political discourse</a></h3><span class="meta">DOI: arXiv.2510.27467</span></article>
+                    <article class="bento-item"><h3><a href="https://www.nature.com/articles/s41538-026-00764-0" target="_blank" rel="noopener noreferrer">Mapping Regional Disparities in Discounted Grocery Products</a></h3><span class="meta">DOI: 10.1038/s41538-026-00764-0</span></article>
+                    <article class="bento-item"><h3><a href="https://arxiv.org/abs/2603.29782" target="_blank" rel="noopener noreferrer">Urban mobility enables deprivation bubble breaking in Indian and Mexican cities</a></h3><span class="meta">DOI: arXiv.2603.29782</span></article>
                 </div>
 
                 <br>

@@ -10,17 +10,17 @@ export const DATA = {
             title: "Postdoctoral Researcher",
             institution: "ISI Foundation",
             year: "Aug. 2025 - Currently",
-            description: `I am a postdoctoral researcher in Urban Dynamics at the ISI Foundation in the <a href="https://www.riccardodiclemente.com" target="_blank">Complex Connections Lab</a>, led by prof. Riccardo Di Clemente.<br>
+            description: `I am a postdoctoral researcher in Urban Dynamics at the ISI Foundation in the <a href="https://www.riccardodiclemente.com" target="_blank" rel="noopener noreferrer">Complex Connections Lab</a>, led by prof. Riccardo Di Clemente.<br>
             I work on the COLINE (COmplex LInks of NEighbourhoods) DUT European Partnership project F-DUT-2023-0037.<br>
-            More information can be found here: <a href="https://www.dut-coline.org" target="_blank">COLINE</a>`
+            More information can be found here: <a href="https://www.dut-coline.org" target="_blank" rel="noopener noreferrer">COLINE</a>`
         },
         {
             title: "Postdoctoral Researcher",
             institution: "Technical University of Denmark (DTU Compute)",
             year: "Jan. 2024 - Aug. 2025",
-            description: `I was a postdoctoral researcher in Urban Multimodal Mobility Modeling at the Technical University of Denmark in the <a href="https://github.com/SocialComplexityLab" target="_blank">Social Complexity Lab</a>, led by Sune Lehmann and Laura Alessandretti.<br>
+            description: `I was a postdoctoral researcher in Urban Multimodal Mobility Modeling at the Technical University of Denmark in the <a href="https://github.com/SocialComplexityLab" target="_blank" rel="noopener noreferrer">Social Complexity Lab</a>, led by Sune Lehmann and Laura Alessandretti.<br>
             I have worked on the GEMINI (Greening European Mobility through cascading innovation INItiatives) project funded by the European Union’s Horizon Innovation Actions programme under Grant agreement No. 10110380.<br>
-            More information can be found here: <a href="https://www.geminiproject.eu" target="_blank">GEMINI</a>`
+            More information can be found here: <a href="https://www.geminiproject.eu" target="_blank" rel="noopener noreferrer">GEMINI</a>`
         },
         {
             title: "Ph.D. & Doctor Europaeus in Physics",
@@ -29,14 +29,14 @@ export const DATA = {
             description: `Final Grade: excellent quality cum laude<br>
             Thesis Title: Complex dynamics in social systems during recent exogenous and endogenous events<br>
             Topics: Physics, Complex Networks, Epidemic Spreading, Opinion Dynamics, Online Social Media<br>
-            Supervisors: Professor <a href="https://www.giuliocimini.com" target="_blank">Giulio Cimini</a>`
+            Supervisors: Professor <a href="https://www.giuliocimini.com" target="_blank" rel="noopener noreferrer">Giulio Cimini</a>`
         },
         {
             title: "Data Scientist",
             institution: "Bank of Italy",
             year: "Oct. 2019 - Apr. 2020",
             description: `I have built and analysed the Knowledge Graph of Italian Companies (KG-IC), employed during the COVID-19 crisis (Golden Power).<br>
-            More informations can be found here: <a href="https://www.bankit.art" target="_blank">ART</a>, <a href="https://kg19.bankit.art" target="_blank">KG-COVID-19</a>`
+            More informations can be found here: <a href="https://www.bankit.art" target="_blank" rel="noopener noreferrer">ART</a>, <a href="https://kg19.bankit.art" target="_blank" rel="noopener noreferrer">KG-COVID-19</a>`
         },
         {
             title: "Master Degree in Theoretical Physics",

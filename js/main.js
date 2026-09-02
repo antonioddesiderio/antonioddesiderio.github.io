@@ -38,36 +38,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000); // Delay slightly to ensure layout settle or do it in finishIntro
 });
 
+const TAB_IDS = ['welcome', 'jobs', 'publications', 'students', 'collaborations', 'behind-paper', 'know-more'];
+
+function showSection(id) {
+    if (!TAB_IDS.includes(id)) id = 'welcome';
+    TAB_IDS.forEach(sectionId => {
+        const el = document.getElementById(sectionId);
+        if (!el) return;
+        if (sectionId === id) {
+            el.classList.remove('section-hidden');
+            if (id === 'collaborations' && window.collabMap) {
+                setTimeout(() => window.collabMap.invalidateSize(), 100);
+            }
+            if (id === 'know-more' && window.mangaBg) {
+                setTimeout(() => window.mangaBg.resize(), 100);
+            }
+        } else {
+            el.classList.add('section-hidden');
+        }
+    });
+}
+
+function sectionFromHash() {
+    const id = (location.hash || '').replace(/^#/, '');
+    return TAB_IDS.includes(id) ? id : 'welcome';
+}
+
 function setupNavigation() {
     setupMobileNav();
-    const sections = ['welcome', 'jobs', 'publications', 'students', 'collaborations', 'behind-paper', 'know-more'];
     const navLinks = document.querySelectorAll('.nav-links a');
-
-    // Helper to show a specific section
-    const showSection = (id) => {
-        sections.forEach(sectionId => {
-            const el = document.getElementById(sectionId);
-            if (el) {
-                if (sectionId === id) {
-                    el.classList.remove('section-hidden');
-                    // Fix Leaflet rendering when tab becomes visible
-                    if (id === 'collaborations' && window.collabMap) {
-                        setTimeout(() => {
-                            window.collabMap.invalidateSize();
-                        }, 100);
-                    }
-                    // Fix Manga Canvas size when tab becomes visible
-                    if (id === 'know-more' && window.mangaBg) {
-                        setTimeout(() => {
-                            window.mangaBg.resize();
-                        }, 100);
-                    }
-                } else {
-                    el.classList.add('section-hidden');
-                }
-            }
-        });
-    };
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -76,16 +75,13 @@ function setupNavigation() {
                 e.preventDefault();
                 const targetId = href.substring(1);
                 showSection(targetId);
-
-                // Optional: Update URL hash without scrolling
                 history.pushState(null, null, `#${targetId}`);
             }
         });
     });
 
-    // Initially hide everything except welcome (will be handled by finishIntro somewhat, but good to ensure logic here too if accessed directly, though finishIntro handles mains visibility)
-    // Actually, let's enforce it on load as well, or right after content population.
-    // showSection('welcome'); // Let's do this in finishIntro to not mess up the fade-in of main-content
+    window.addEventListener('hashchange', () => showSection(sectionFromHash()));
+    window.addEventListener('popstate', () => showSection(sectionFromHash()));
 }
 
 function populateContent() {
@@ -156,7 +152,7 @@ function populateContent() {
         if (socials && socials.length > 0) {
             contactsHtml += `<div class="socials-list">`;
             socials.forEach(social => {
-                contactsHtml += `<a href="${social.url}" class="social-link" target="_blank">${social.name}</a>`;
+                contactsHtml += `<a href="${social.url}" class="social-link" target="_blank" rel="noopener noreferrer">${social.name}</a>`;
             });
             contactsHtml += `</div>`;
         }
@@ -222,7 +218,7 @@ function loadPublications() {
                 outreachItems.forEach(pub => {
                     const li = document.createElement('li');
                     li.className = 'list-item';
-                    let content = `<h3><a href="${pub.link}" target="_blank">${pub.title}</a></h3>`;
+                    let content = `<h3><a href="${pub.link}" target="_blank" rel="noopener noreferrer">${pub.title}</a></h3>`;
                     content += `<span class="meta">${pub.venue}, ${pub.year}</span>`;
                     li.innerHTML = content;
                     outreachList.appendChild(li);
@@ -271,7 +267,7 @@ function loadPublications() {
                     let html = `
                         <div>
                             <span class="type-tag">${pub.type}</span>
-                            <h3><a href="${pub.link}" target="_blank">${pub.title}</a></h3>
+                            <h3><a href="${pub.link}" target="_blank" rel="noopener noreferrer">${pub.title}</a></h3>
                             <span class="meta">${pub.venue}, ${pub.year}${pub.doi ? ` | DOI: ${pub.doi}` : ''}</span>
                         </div>
                     `;
@@ -417,6 +413,7 @@ function finishIntro(overlay, mainContent) {
 
     // Resolve content
     mainContent.classList.add('cinematic-resolve');
+    showSection(sectionFromHash());
 
     // 3. Cleanup
     setTimeout(() => {
@@ -585,7 +582,7 @@ function loadCollaborationsMap() {
                 <h3>${collab.name}</h3>
                 <span class="uni">${collab.university}</span>
                 <span class="uni" style="font-size: 0.75rem; color: #888;">${collab.tag}</span>
-                ${collab.site && collab.site !== '#' ? `<a href="${collab.site}" target="_blank">View Profile</a>` : ''}
+                ${collab.site && collab.site !== '#' ? `<a href="${collab.site}" target="_blank" rel="noopener noreferrer">View Profile</a>` : ''}
             </div>
         `;
 
@@ -627,7 +624,7 @@ function setupAssistant() {
             const img = document.createElement('img');
             img.src = 'assets/mio-avatar.png';
             img.className = 'assistant-img';
-            img.alt = 'Assistant';
+            img.alt = '';
 
             // Balloon
             const balloon = document.createElement('div');
