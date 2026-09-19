@@ -182,13 +182,6 @@ export const DATA = {
             tag: "Food"
         },
         {
-            name: "Prof. Laura Alessandretti",
-            university: "DTU Compute",
-            coords: [55.7838539,12.5135907],
-            site: "https://laura.alessandretti.com/",
-            tag: "Human Mobility"
-        },
-        {
             name: "Prof. Riccardo Di Clemente",
             university: "Northeastern University London",
             coords: [51.5081157,-0.0779127],
