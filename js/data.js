@@ -127,7 +127,7 @@ export const DATA = {
             name: "Franziska Bäuerlein",
             collaborators: "Prof. Sune Lehmann",
             university: "Technical University of Denmark",
-            year: "2024",
+            year: "2025",
             tags: ["Master", "Computer Science", "Food"]
         },
         {
@@ -135,7 +135,7 @@ export const DATA = {
             name: "Regin Steffansson Kunoy",
             collaborators: "Prof. Sune Lehmann",
             university: "Technical University of Denmark",
-            year: "2024",
+            year: "2025",
             tags: ["Master", "Computer Science", "Urban Dynamics"]
         },
         {
@@ -143,7 +143,7 @@ export const DATA = {
             name: "Diego Rodríguez Gordo",
             collaborators: "Prof. Georgios Arvanitidis",
             university: "Technical University of Denmark",
-            year: "2024",
+            year: "2025",
             tags: ["Master", "Computer Science", "Finance"]
         },
         {
@@ -159,7 +159,7 @@ export const DATA = {
             name: "Margherita Bencini",
             collaborators: "Prof. Daniele Marazzina (polimi), Prof. Paolo Barucca (UCL)",
             university: "Polytechnic University of Milan",
-            year: "2025",
+            year: "2026",
             tags: ["Master", "Finance", "Social Media"]
         },
         {
@@ -167,7 +167,7 @@ export const DATA = {
             name: "Leonardo Rodovero",
             collaborators: "Prof. Sune Lehmann",
             university: "Technical University of Denmark",
-            year: "2025",
+            year: "2026",
             tags: ["Master", "Computer Science", "Food"]
         },
 
@@ -238,7 +238,7 @@ export const DATA = {
             tag: "Human Mobility"
         },
         {
-            name: "Dr. Sandor Juhasz",
+            name: "Dr. Sándor Juhász",
             university: "Corvinus University of Budapest",
             coords: [47.486157,19.0556806],
             site: "https://sandorjuhasz.com//",
@@ -273,6 +273,13 @@ export const DATA = {
         }
     ],
     visiting: [
+        {
+            period: "September 2026",
+            institution: "Centre for Economic and Regional Studies (KRTK), ELTE and Corvinus University of Budapest (Budapest)",
+            lab: "ANETI Lab",
+            host: "Balázs Lengyel and Sándor Juhász"
+        },
+
         {
             period: "October-December 2024",
             institution: "ISTI Institute of CNR, Department of Computer Science Univeristy of Pisa and Scuola Normale Superiore (Pisa)",
